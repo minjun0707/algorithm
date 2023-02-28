@@ -1,0 +1,89 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int n;
+	String table[][];
+	boolean visit[][];
+	int[] dirX = {1, -1, 0, 0};
+	int[] dirY = {0, 0, 1, -1};
+	int count = 0;
+	int redCount = 0;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		n = Integer.parseInt(br.readLine());
+		table = new String[n][n];
+		visit = new boolean[n][n];
+
+		for (int i = 0; i < n; i++) {
+			String str = br.readLine();
+			for (int j = 0; j < n; j++) {
+				table[i][j] = String.valueOf(str.charAt(j));
+			}
+		}
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (visit[i][j] == false) {
+					dfs(i, j, 0);
+					count++;
+				}
+			}
+		}
+
+		visit = new boolean[n][n];
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (visit[i][j] == false) {
+					dfs(i, j, 1);
+					redCount++;
+				}
+			}
+		}
+
+		System.out.println(count + " " + redCount);
+
+	}
+
+	void dfs(int y, int x, int red) {
+
+		visit[y][x] = true;
+
+		//방향탐색
+		for (int i = 0; i < 4; i++) {
+
+			if ((x == 0 && i == 1) || (x == n - 1 && i == 0)
+				|| (y == 0 && i == 3) || (y == n - 1 && i == 2)) {
+				continue;
+			}
+
+			int nowX = x + dirX[i];
+			int nowY = y + dirY[i];
+
+			if (red == 1 && visit[nowY][nowX] == false) {
+				if (table[y][x].equals("B") && table[nowY][nowX].equals("B"))
+					dfs(nowY, nowX, red);
+				else if (!table[y][x].equals("B") && !table[nowY][nowX].equals("B")) {
+					dfs(nowY, nowX, red);
+				}
+
+			} else if (visit[nowY][nowX] == false && table[y][x].equals(table[nowY][nowX])) {
+				dfs(nowY, nowX, red);
+			}
+		}
+
+	}
+
+}
