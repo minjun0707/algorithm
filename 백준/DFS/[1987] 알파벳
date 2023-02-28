@@ -1,0 +1,76 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	int M;
+	char[][] table;
+	boolean[][] visit;
+	boolean[] alpabet = new boolean[26];
+
+	int answer = 0;
+
+	int[] dirX = {1,-1,0,0};
+	int[] dirY = {0,0,1,-1};
+
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		table = new char[N][M];
+		visit = new boolean[N][M];
+
+		for(int i = 0 ; i<N; i++){
+			String str = br.readLine();
+			for(int j = 0; j<M; j++){
+				table[i][j] = str.charAt(j);
+			}
+		}
+
+		dfs(0,0,0);
+		System.out.print(answer);
+	}
+
+	public void dfs(int y,int x,int count){
+
+		count++;
+		visit[y][x] = true;
+		alpabet[table[y][x]-'A'] = true;
+
+		//반복구문
+		for(int i =0 ; i<4; i++) {
+
+			int nextX = x + dirX[i];
+			int nextY = y + dirY[i];
+
+			//어레이체크
+			if((x == 0 && i == 1) || (x == M-1 && i == 0) || (y == 0 && i == 3) ||
+				(y == N-1 && i == 2)) continue;
+
+			//조건체크
+			if(!visit[nextY][nextX] && !alpabet[table[nextY][nextX] - 'A']) {
+				dfs(nextY,nextX,count);
+			}
+		}
+
+		answer = Math.max(count,answer);
+		visit[y][x] = false;
+		alpabet[table[y][x]-'A'] = false;
+
+	}
+
+
+}
