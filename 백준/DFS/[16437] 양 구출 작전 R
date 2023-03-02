@@ -1,0 +1,62 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	char[] animal;
+	int[] score;
+	List<Integer>[] list;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		N = Integer.parseInt(br.readLine());
+		list = new ArrayList[N + 1];
+		animal = new char[N + 1];
+		score = new int[N + 1];
+
+		for (int i = 0; i < N + 1; i++) {
+			list[i] = new ArrayList<Integer>();
+		}
+
+		//루트노드는 인덱스가 1
+		for (int i = 2; i < N + 1; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+
+			animal[i] = st.nextToken().charAt(0);
+			score[i] = Integer.parseInt(st.nextToken());
+			int edge = Integer.parseInt(st.nextToken());
+
+			list[edge].add(i);
+		}
+
+		System.out.println(postOrder(1));
+	}
+
+	public long postOrder(int node) {
+
+		long sum = 0;
+
+		//Left -> Right -> Root
+		for (int next : list[node]) {
+			sum += postOrder(next);
+		}
+
+		if (animal[node] == 'S') {
+			return sum + score[node];
+		} else {
+			return (sum - score[node] >= 0) ? sum - score[node] : 0;
+		}
+
+	}
+
+}
