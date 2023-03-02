@@ -1,0 +1,106 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	int[][] map;
+	boolean[][] visit;
+
+	List<Integer> list = new ArrayList<>();
+
+	int[] dirX = {1, -1, 0, 0};
+	int[] dirY = {0, 0, 1, -1};
+
+	Queue<Node> que = new LinkedList<>();
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		N = Integer.parseInt(br.readLine());
+		map = new int[N][N];
+		visit = new boolean[N][N];
+
+
+		for (int i = 0; i < N; i++) {
+			String str = br.readLine();
+			for (int j = 0; j < N; j++) {
+				map[i][j] = str.charAt(j) - '0';
+			}
+		}
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (visit[i][j] == false && map[i][j] == 1) {
+					bfs(i, j);
+				}
+			}
+		}
+
+		Collections.sort(list);
+
+		System.out.println(list.size());
+		for(int i = 0 ; i< list.size();i++) {
+			System.out.println(list.get(i));
+		}
+	}
+
+	public void bfs(int y, int x) {
+		que.offer(new Node(x, y));
+		visit[y][x] = true;
+
+		int count = 1;
+		while (!que.isEmpty()) {
+
+			Node node = que.poll();
+
+			for (int i = 0; i < 4; i++) {
+
+				int nextX = node.x + dirX[i];
+				int nextY = node.y + dirY[i];
+
+				if (rangeCheck(nextX, nextY) == true && visit[nextY][nextX] == false
+					&& map[nextY][nextX] == 1) {
+
+					que.offer(new Node(nextX,nextY));
+					visit[nextY][nextX] = true;
+					map[nextY][nextX] = map[node.y][node.x] + 1;
+					count ++;
+				}
+
+			}
+
+		}
+
+		list.add(count);
+		System.out.println(count);
+
+
+	}
+
+	private boolean rangeCheck(int x, int y) {
+		return (x >= 0 && x < N && y >= 0 && y < N);
+	}
+
+	class Node {
+		int x;
+		int y;
+
+		public Node(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
+}
