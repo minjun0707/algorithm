@@ -1,0 +1,69 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	int H;
+
+	int[] top;
+	int[] bottom;
+	int[] sum;
+	int min = Integer.MAX_VALUE;
+	int count = 0;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//동굴 길이
+		N = Integer.parseInt(st.nextToken());
+
+		//동굴 높이
+		H = Integer.parseInt(st.nextToken());
+
+		top = new int[H + 1];
+		bottom = new int[H + 1];
+		sum = new int[H + 1];
+
+		for (int i = 0; i < N; i++) {
+			int height = Integer.parseInt(br.readLine());
+
+			//짝수면 top
+			if (i % 2 == 0) {
+				top[height]++;
+			}
+			//홀수면 bottom
+			else if (i % 2 == 1) {
+				bottom[height]++;
+			}
+		}
+
+		for (int i = 1; i <= H; i++) {
+			top[i] = top[i] + top[i - 1];  //높이가 h
+			bottom[i] = bottom[i] + bottom[i - 1]; //높이가 h 석순
+		}
+
+
+		for (int i = 1; i <= H; i++) {
+			sum[i]= bottom[H]-bottom[i-1] + (top[H] - top[H-i]);
+			min = Math.min(min,sum[i]);
+		}
+
+		for (int i = 1; i <= H; i++) {
+			if(min == sum[i]) {
+				count++;
+			}
+		}
+
+		System.out.println(min + " " + count);
+
+	}
+
+}
