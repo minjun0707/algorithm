@@ -9,8 +9,9 @@ import java.util.StringTokenizer;
 import java.util.function.Predicate;
 
 public class Main {
+
 	int N;
-	int[][] dp;
+	int dp[][];
 
 	public static void main(String[] args) throws IOException {
 		new Main().solution();
@@ -18,36 +19,30 @@ public class Main {
 
 	public void solution() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		N = Integer.parseInt(br.readLine());
 
+		N = Integer.parseInt(br.readLine());
 		dp = new int[N + 1][N + 1];
+		int[][] arr = new int[N+1][N+1];
+
 		for (int i = 1; i <= N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			for (int j = 1; j <= i; j++) {
-				int now = Integer.parseInt(st.nextToken());
-				//맨 왼쪽
-				if (j == 1) {
-					dp[i][j] = dp[i - 1][j] + now;
-				}
-				//맨 오른쪽
-				else if (j == i) {
-					dp[i][j] = dp[i - 1][j - 1] + now;
-				}
-				//가운데
-				else {
-					dp[i][j] = Math.max(dp[i - 1][j - 1], dp[i - 1][j]) + now;
-				}
-
+				dp[i][j] = Integer.parseInt(st.nextToken());
 			}
-
 		}
 
-		int answer = 0;
-		for (int j = 1; j <= N; j++) {
-			answer = Math.max(answer, dp[N][j]);
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= i ; j++) {
+				dp[i][j] = Math.max(dp[i-1][j-1],dp[i-1][j]) + dp[i][j];
+			}
 		}
 
-		System.out.println();
+		int answer = Integer.MIN_VALUE;
+		for (int i = 1; i <= N ; i++) {
+			answer = Math.max(dp[N][i],answer);
+		}
+
+		System.out.println(answer);
 	}
 
 }

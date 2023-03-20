@@ -16,7 +16,7 @@ public class Main {
 	}
 
 	public void solution() throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedRveader br = new BufferedReader(new InputStreamReader(System.in));
 		//StringTokenizer st = new StringTokenizer(br.readLine());
 
 		//객차 수

@@ -6,21 +6,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.function.Predicate;
 
 public class Main {
 
 	int N;
-	int[][] map;
-	int[][] dp;
+	int dp[][];
+	int map[][];
 
 	int[] dirX = {1, -1, 0, 0};
 	int[] dirY = {0, 0, 1, -1};
-
-	//현재 dfs에서 최고값
-	int max=0;
-	int answer =0;
-
-
 
 	public static void main(String[] args) throws IOException {
 		new Main().solution();
@@ -28,44 +23,54 @@ public class Main {
 
 	public void solution() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
 		N = Integer.parseInt(br.readLine());
-		map = new int[N][N];
-		dp = new int[N][N];
 
-		for (int i = 0; i < N; i++) {
+		dp = new int[N + 1][N + 1];
+		map = new int[N + 1][N + 1];
+
+		for (int i = 1; i <= N ; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			for (int j = 0; j < N; j++) {
+			for (int j = 1; j <= N ; j++) {
 				map[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
 
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-					max = Math.max(max,dfs(i, j));
+		int answer = Integer.MIN_VALUE;
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= N; j++) {
+				answer = Math.max(dfs(i, j), answer);
 			}
 		}
-		System.out.println(max);
+		System.out.println(answer);
+
 	}
 
-	//현재위치에서 갈 수 있는 길이를 반환
-	int dfs(int y, int x) {
-		//dp의 값이 존재하는 경우
+	//더 작은 값을 탐색하므로 visit 배열이 필요 없다.
+	//DP값을 -1로 초기화 하는 경우와 0으로 초기화는 두가지를 고려해야한다.
+	public int dfs(int y, int x) {
+
+		//dp값이 있는 경우 바로 리턴하여 탐색 중지
 		if(dp[y][x] != 0) {
 			return dp[y][x];
 		}
 
-		//방문
+		//방문 여부를 판단하기 위해서
+		//dp를 0으로 초기화 하고  0인 경우
+		//탐색을 안해서 0 인지 경로가 0인지 구분이 불가능 하다
 		dp[y][x] = 1;
 
 		for (int i = 0; i < 4; i++) {
 			int nextX = x + dirX[i];
 			int nextY = y + dirY[i];
 
-			//다음 노드로 움직일 수 있으면
-			if (rangeCheck(nextX, nextY)) {
-				if (map[nextY][nextX] > map[y][x]) {
-					dp[y][x] = Math.max(dp[y][x],dfs(nextY,nextX) +1);
+			if (rangeCheck(nextX,nextY)) {
+				if(map[nextY][nextX] < map[y][x]) {
+					/*
+					2가지 이상의 길을 탐색하는 경우
+					첫번째 탐색의 크기와 두번째 탐색 크기를 비교해주기 위해서
+					dp[y][x], dfs(nextY,nextX) + 1의 max 값을 dp[y][x]에 넣어야 함
+					*/
+					dp[y][x] = Math.max(dp[y][x], dfs(nextY,nextX) + 1);
 				}
 			}
 		}
@@ -73,10 +78,11 @@ public class Main {
 		return dp[y][x];
 	}
 
-
-	boolean rangeCheck(int x, int y) {
-		return (x >= 0 && x < N && y >= 0 && y < N);
+	//dp 선언시 배열의 크기를 고려하여 rangeCheck
+	public boolean rangeCheck(int x, int y) {
+		return x >= 1 && x <= N && y >= 1 && y <= N;
 	}
 }
+
 
 
