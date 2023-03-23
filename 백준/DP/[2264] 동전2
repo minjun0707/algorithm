@@ -13,7 +13,7 @@ public class Main {
 	int[] dp;
 	int[] coin;
 	boolean isImpossible = false;
-
+             
 	public static void main(String[] args) throws IOException {
 		new Main().solution();
 	}
