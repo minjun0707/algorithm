@@ -1,0 +1,180 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.function.Predicate;
+
+public class Main {
+
+	int N;
+	int M;
+
+	int[][] map;
+	boolean[][] visit;
+	int[] dirX = {-1, -1, 0, 1, 1, 1, 0, -1};
+	int[] dirY = {0, -1, -1, -1, 0, 1, 1, 1};
+
+	int[] dirXCopy = {1, 1, -1, -1};
+	int[] dirYCopy = {1, -1, -1, 1};
+	List<Cloud> nowCloudInfo = new ArrayList<>();
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		//한 줄 입력
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		map = new int[N][N];
+		visit = new boolean[N][N];
+
+		//map 입력받기
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+
+			for (int j = 0; j < N; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+
+		//기초 구름 생성
+		nowCloudInfo.add(new Cloud(0, N - 2));
+		nowCloudInfo.add(new Cloud(1, N - 2));
+		nowCloudInfo.add(new Cloud(0, N - 1));
+		nowCloudInfo.add(new Cloud(1, N - 1));
+
+		//이동정보 입력받기
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+
+			int dir = Integer.parseInt(st.nextToken());
+			int move = Integer.parseInt(st.nextToken());
+
+			move(dir, move);
+			addWater();
+			copyWater();
+			deleteCloud();
+			createCloud();
+
+			// for (int j = 0; j < N; j++) {
+			// 	System.out.println();
+			// 	for (int k = 0; k < N; k++) {
+			// 		System.out.print(map[j][k]);
+			// 	}
+			// }
+			// System.out.println();
+
+		}
+
+		int sum = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				sum = sum + map[i][j];
+			}
+		}
+		System.out.println(sum);
+
+	}
+
+	public void createCloud() {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				if (map[i][j] >= 2) {
+					//이전에 방문했으면 구름을 만들지 않고 초기화
+					if (visit[i][j] == true) {
+
+						visit[i][j] = false;
+						continue;
+					}
+
+					nowCloudInfo.add(new Cloud(j, i));
+					map[i][j] = map[i][j] - 2;
+				}
+			}
+		}
+	}
+
+	public void deleteCloud() {
+		nowCloudInfo.clear();
+	}
+
+	public void move(int dir, int move) {
+
+		//4가의 구름이 이동 한다
+		for (int i = 0; i < nowCloudInfo.size(); i++) {
+			//move해야 하는 횟수 만큼
+			for (int j = 0; j < move; j++) {
+				nowCloudInfo.get(i).x = (nowCloudInfo.get(i).x + dirX[dir - 1] + N) % N;
+				nowCloudInfo.get(i).y = (nowCloudInfo.get(i).y + dirY[dir - 1] + N) % N;
+			}
+		}
+
+	}
+
+	public void copyWater() {
+
+		//4가지 구름
+		for (int i = 0; i < nowCloudInfo.size(); i++) {
+
+			//4개 방향 탐색
+			for (int j = 0; j < 4; j++) {
+				int nowX = nowCloudInfo.get(i).x + dirXCopy[j];
+				int nowY = nowCloudInfo.get(i).y + dirYCopy[j];
+
+				//대각선 범위 체크
+				if (copyRangeCheck(nowX, nowY) == false) {
+					continue;
+				}
+
+				//물의 양이 0이면 물의 양이 증가하지 않는다
+				if (map[nowY][nowX] == 0) {
+					continue;
+				}
+
+				map[nowCloudInfo.get(i).y][nowCloudInfo.get(i).x]++;
+			}
+
+		}
+
+	}
+
+	public boolean copyRangeCheck(int x, int y) {
+		return (x < N && x >= 0 && y >= 0 && y < N);
+	}
+
+	public void addWater() {
+		for (int i = 0; i < nowCloudInfo.size(); i++) {
+			map[nowCloudInfo.get(i).y][nowCloudInfo.get(i).x]++;
+			visit[nowCloudInfo.get(i).y][nowCloudInfo.get(i).x] = true;
+		}
+	}
+
+	class Cloud {
+		int x;
+		int y;
+
+		public Cloud(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
+	}
+}
+
+
+
+
+
