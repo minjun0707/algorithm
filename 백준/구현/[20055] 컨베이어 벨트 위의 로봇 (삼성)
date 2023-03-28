@@ -1,0 +1,144 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	int K;
+
+	List<Cell> list = new ArrayList<>();
+
+
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//벨트길이
+		N = Integer.parseInt(st.nextToken());
+
+		//내구도
+		K = Integer.parseInt(st.nextToken());
+
+		//list에
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < 2 * N; i++) {
+				list.add(new Cell(Integer.parseInt(st.nextToken())));;
+		}
+
+
+		//올리는 위치의 list에서 인덱스는 0
+		//내리는 위치는 n-1;
+
+		//list size = 2n
+		//list 마지막 인덱스 2n -1;
+
+		//내구도가 0인 칸의 개수가 k 이상이라면 과정을 종료한다.
+		int rotateCount=0;
+		while(true) {
+
+			//1번 스텝
+			//list가 한칸 회전한다.
+			//list에 맨뒤칸을 제거하고 맨 앞 칸으로 옮긴다.
+			Cell removedCell = list.remove(2 * N - 1);
+			list.add(0,removedCell);
+
+			// //로봇이 이동한칸의 내구도가 감소하여야한다
+			// for (int i = 0; i < list.size(); i++) {
+			// 	if(list.get(i).robotExist == true) {
+			// 		list.get(i).life--;
+			// 	}
+			// }
+
+			//내리기
+			if(list.get(N-1).robotExist == true){
+				//내기리
+				list.get(N-1).robotExist = false;
+			}
+
+
+			//2번 스텝
+			for (int i = list.size()-1; i >= 0; i--) {
+				//i인덱스에 로봇이 있고
+				//다음인덱스에 로봇이 없다면 이동!
+				if(list.get(i).robotExist ==true) {
+					//순환을 하니까 나머지 연산
+					//다음 벨트에 로봇이 없으면 이동
+					if(list.get(i+1).robotExist == false && list.get(i+1).life >=1){
+						//로봇이 칸을 이동하고
+
+						//기존 칸의 로봇은 사라진다.
+						list.get(i).robotExist = false;
+
+						//다음 칸의 로봇이 생성된다.
+						list.get(i+1).robotExist= true;
+
+						//다음 칸의 내구도가 즉시 1 간소한다.
+						list.get(i+1).life--;
+					}
+
+				}
+			}
+
+			//내리기
+			if(list.get(N-1).robotExist == true){
+				//내기리
+				list.get(N-1).robotExist = false;
+			}
+
+			//3번 스텝
+			if(list.get(0).life >= 1) {
+				list.get(0).robotExist = true;
+				list.get(0).life--;
+			}
+			
+
+
+			//회전 끝
+			rotateCount++;
+
+			//내구도 k개 이상 확인
+			int count = 0;
+			for (int i = 0; i < list.size(); i++) {
+				if(list.get(i).life == 0) {
+					count++;
+				}
+			}
+
+			if(count >= K) {
+				break;
+			}
+
+		}
+
+		System.out.println(rotateCount);
+	}
+
+	class Cell {
+		int life;
+		boolean robotExist;
+
+		Cell(int life) {
+			this.life = life;
+		}
+	}
+}
+
+
+
+
+
+
+
+
