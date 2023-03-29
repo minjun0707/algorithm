@@ -1,0 +1,117 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	int M;
+	int V;
+
+	boolean[] visit;
+
+	ArrayList<Integer>[] arr;
+
+	Queue<Integer> que = new LinkedList();
+
+	List<Node> nodeList = new ArrayList<>();
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//정점의 개수
+		N = Integer.parseInt(st.nextToken());
+
+		//간선의 개수
+		M = Integer.parseInt(st.nextToken());
+
+		//탐색 시작 정점 번호
+		V = Integer.parseInt(st.nextToken());
+
+		arr = new ArrayList[N+1];
+
+		for (int i = 0; i < N+1; i++) {
+			arr[i] = new ArrayList<>();
+		}
+
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			int vertex = Integer.parseInt(st.nextToken());
+			int edge = Integer.parseInt(st.nextToken());
+
+			arr[vertex].add(edge);
+			arr[edge].add(vertex);
+		}
+
+		for (int i = 1; i < N+1; i++) {
+			Collections.sort(arr[i]);
+		}
+
+		visit = new boolean[N+1];
+		dfs(V);
+		System.out.println();
+
+		visit = new boolean[N+1];
+		bfs(V);
+
+
+	}
+
+	//idx start
+	public void bfs(int idx) {
+		que.offer(idx);
+		visit[idx] = true;
+
+		while(!que.isEmpty()) {
+			int now = que.poll();
+			System.out.print(now + " ");
+
+			for(int i=0; i < arr[now].size(); i++){
+				if(!visit[arr[now].get(i)]) {
+					que.offer(arr[now].get(i));
+					visit[arr[now].get(i)] = true;
+				}
+			}
+		}
+	}
+
+	public void dfs(int idx) {
+
+		visit[idx] = true;
+
+		System.out.print(idx +" ");
+		//반복
+		for (int i = 0; i < arr[idx].size(); i++) {
+			if(!visit[arr[idx].get(i)]){
+				dfs(arr[idx].get(i));
+			}
+		}
+	}
+
+	public void bfs() {
+
+	}
+
+	class Node {
+		int vertex;
+		List<Integer> edge = new ArrayList<>();
+
+		public Node(int vertex) {
+			this.vertex = vertex;
+		}
+
+	}
+
+}
