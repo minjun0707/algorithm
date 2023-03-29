@@ -1,0 +1,103 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int storeCount;
+	List<Point> pointList = new ArrayList<>();
+	boolean visit[];
+
+	Queue<Point> que = new LinkedList<>();
+
+	Point festival;
+	Point home;
+
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+		//테스트 케이스 개수
+		int T = Integer.parseInt(br.readLine());
+
+		//테스트 케이스 개수만큼 입력 받기
+		for (int i = 0; i < T; i++) {
+			//편의점 개수
+			storeCount = Integer.parseInt(br.readLine());
+			//편의점 위치 입력받는다
+			for (int j = 0; j < storeCount+2; j++) {
+				st = new StringTokenizer(br.readLine());
+				int x = Integer.parseInt(st.nextToken());
+				int y = Integer.parseInt(st.nextToken());
+				pointList.add(new Point(x,y));
+			}
+
+			visit = new boolean[storeCount+2];
+			boolean isGoToFestival = bfs();
+			System.out.println(isGoToFestival == true ? "happy" : "sad");
+
+			pointList.clear();
+			que.clear();
+		}
+
+	}
+
+	public boolean bfs() {
+
+		//첫번째 인덱스는 home
+		que.offer(pointList.get(0));
+		visit[0] = true;
+
+		while(!que.isEmpty()) {
+			Point point = que.poll();
+
+			//만약 마지막 페스티벌이 que 들어오면 탐색이 가능하다는 거 이므로
+			//pointlist 마지막에는 페스티벌 장소가 들어있다
+			if(point.x == pointList.get(pointList.size()-1).x &&
+				point.y == pointList.get(pointList.size()-1).y) {
+				return true;
+			}
+
+
+			for (int i = 1; i < pointList.size(); i++) {
+
+				//방문을 하지 않았고 현재 포인트와 거리 차이가
+				if(visit[i] == false && point.getDistance(pointList.get(i)) <= 1000) {
+					que.offer(pointList.get(i));
+					visit[i] =true;
+				}
+			}
+		}
+
+		return false;
+
+	}
+
+	class Point {
+		int x;
+		int y;
+
+		Point(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		public int getDistance(Point point) {
+			return Math.abs(this.x- point.x) + Math.abs(this.y- point.y);
+		}
+	}
+
+}
+
+
+
+
