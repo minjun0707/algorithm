@@ -1,0 +1,224 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	int M;
+
+	int r;
+	int c;
+
+	int K;
+
+	//맵
+	int[][] map;
+
+	int[] instruct;
+
+
+	List<Integer> diceRow = new ArrayList<>();
+	List<Integer> diceCol = new ArrayList<>();
+
+	int top = 1;
+	int bottom = 3;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//맵의 크기
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		//시작위치
+		r = Integer.parseInt(st.nextToken());
+		c = Integer.parseInt(st.nextToken());
+
+		//명령의 수
+		K = Integer.parseInt(st.nextToken());
+
+		map = new int[N][M];
+		instruct = new int[K];
+
+		//map 입력받기
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < M; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+
+		//명령 입력받기
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < K; i++) {
+			instruct[i] = Integer.parseInt(st.nextToken());
+		}
+
+		//주사위 초기값 설정
+		diceRow.add(0);
+		diceRow.add(0);
+		diceRow.add(0);
+		diceRow.add(0);
+
+		diceCol.add(0);
+		diceCol.add(0);
+		diceCol.add(0);
+		diceCol.add(0);
+
+		// 동쪽이나 남쪽으로 굴리면
+		// 맨뒤에꺼 빼고 맨앞
+		// 서쪽 북쪽
+		// 맨앞꺼 빼고 맨뒤에
+		// 0 1 2 3
+		// 1 천장 3번 바닥
+
+		//명령의 수만큼 만복
+		for (int i = 0; i < K; i++) {
+
+			//동
+			if (instruct[i] == 1) {
+				//동쪽으로 주사위 이동
+				if (rangeCheck(r, c + 1) == false) {
+					continue;
+				}
+
+				int removedDice = diceRow.remove(diceRow.size() - 1);
+				diceRow.add(0, removedDice);
+
+
+				//주사위 이동
+				r = r;
+				c = c + 1;
+
+				//주사위 복사
+				//지도가 0이면 주사위 바닥면을 지도에 업데이트
+				if (map[r][c] == 0) {
+					map[r][c] = diceRow.get(bottom);
+				} else {
+					diceRow.set(bottom, map[r][c]);
+					map[r][c] = 0;
+				}
+
+				diceCol.set(bottom,diceRow.get(bottom));
+				diceCol.set(top,diceRow.get(top));
+				//윗면출력
+				System.out.println(diceRow.get(top));
+			}
+
+			//서
+			if (instruct[i] == 2) {
+				//서쪽으로 주사위 이동
+				if (rangeCheck(r, c - 1) == false) {
+					continue;
+				}
+
+				int removedDice = diceRow.remove(0);
+				diceRow.add(removedDice);
+
+				//주사위 이동
+				r = r;
+				c = c - 1;
+
+				//주사위 복사
+				//지도가 0이면 주사위 바닥면을 지도에 업데이트
+				if (map[r][c] == 0) {
+					map[r][c] = diceRow.get(bottom);
+				} else {
+					diceRow.set(bottom, map[r][c]);
+					map[r][c] = 0;
+				}
+
+				//윗면출력
+				diceCol.set(bottom,diceRow.get(bottom));
+				diceCol.set(top,diceRow.get(top));
+
+				System.out.println(diceRow.get(top));
+
+			}
+
+			//북
+			if (instruct[i] == 3) {
+				//북으로 주사위 이동
+				if (rangeCheck(r - 1, c) == false) {
+					continue;
+				}
+
+				int removedDice = diceCol.remove(0);
+				diceCol.add(removedDice);
+
+				//주사위 이동
+				r = r - 1;
+				c = c;
+
+				//주사위 복사
+				//지도가 0이면 주사위 바닥면을 지도에 업데이트
+				if (map[r][c] == 0) {
+					map[r][c] = diceCol.get(bottom);
+				} else {
+					diceCol.set(bottom, map[r][c]);
+					map[r][c] = 0;
+				}
+
+				diceRow.set(bottom,diceCol.get(bottom));
+				diceRow.set(top,diceCol.get(top));
+				//윗면출력
+				System.out.println(diceCol.get(top));
+
+			}
+
+			//남
+			if (instruct[i] == 4) {
+				//남쪽으로 주사위 이동
+				if (rangeCheck(r+1, c) == false) {
+					continue;
+				}
+
+				int removedDice = diceCol.remove(diceCol.size()-1);
+				diceCol.add(0, removedDice);
+
+				//주사위 이동
+				r = r + 1;
+				c = c;
+
+				//주사위 복사
+				//지도가 0이면 주사위 바닥면을 지도에 업데이트
+				if (map[r][c] == 0) {
+					map[r][c] = diceCol.get(bottom);
+				} else {
+					diceCol.set(bottom, map[r][c]);
+					map[r][c] = 0;
+				}
+
+				diceRow.set(bottom,diceCol.get(bottom));
+				diceRow.set(top,diceCol.get(top));
+				//윗면출력
+				System.out.println(diceCol.get(top));
+			}
+
+		}
+
+	}
+
+	public boolean rangeCheck(int r, int c) {
+		return (r >= 0 && r < N && c >= 0 && c < M);
+	}
+
+}
+
+
+
+
+
