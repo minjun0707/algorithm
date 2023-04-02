@@ -1,0 +1,117 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	int M;
+
+	List<Cell> house = new ArrayList<>();
+	List<Cell> chicken = new ArrayList<>();
+	List<Cell> choice = new ArrayList<>();
+	int[] distancePerHouse;
+	boolean visit[];
+
+	int answer = Integer.MAX_VALUE;
+
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		for (int i = 1; i <= N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 1; j <= N; j++) {
+				int value = Integer.parseInt(st.nextToken());
+
+				//집
+				if (value == 1) {
+					house.add(new Cell(i, j));
+				}
+
+				//치킨집
+				if (value == 2) {
+					chicken.add(new Cell(i, j));
+				}
+			}
+		}
+
+		visit = new boolean[chicken.size()];
+		distancePerHouse = new int[house.size()];
+		dfs(0,0);
+		System.out.println(answer);
+
+	}
+
+	public void dfs(int depth,int start) {
+		//탈출
+		//치킨집 위치를 m만큼 선택했을때
+		//치킨집을 기준으로해서 집까지의 거리를 구하는데
+		//각 집은 치킨집 루프를 돌 때 최소값이어야하고
+		//그렇게 해서 구한 것 중에서 최소 치킨 거리를 뽑아야한다
+		if(depth == M) {
+			//초기화
+			distancePerHouse = new int[house.size()];
+
+			for (int i = 0; i < choice.size() ; i++) {
+
+				for (int j = 0; j < house.size() ; j++) {
+					int distance = Math.abs(choice.get(i).r - house.get(j).r) +
+						Math.abs(choice.get(i).c - house.get(j).c);
+
+					if(distancePerHouse[j] == 0){
+						distancePerHouse[j] = distance;
+					}else {
+						distancePerHouse[j] = Math.min(distance,distancePerHouse[j]);
+					}
+					}
+
+			}
+
+			//치킨 거리 총합
+			int sum=0;
+			for (int j = 0; j < house.size(); j++) {
+				sum = sum + distancePerHouse[j];
+			}
+
+			answer = Math.min(answer,sum);
+		}
+
+		//반복
+		for (int i = start; i < chicken.size(); i++) {
+			if(!visit[i]) {
+				choice.add(chicken.get(i));
+				visit[i] = true;
+
+				dfs(depth + 1,i+1);
+
+				choice.remove(choice.size() - 1);
+				visit[i] = false;
+			}
+		}
+
+
+	}
+
+	class Cell {
+		int r;
+		int c;
+
+		Cell(int r, int c) {
+			this.r = r;
+			this.c = c;
+		}
+	}
+}
+
