@@ -1,0 +1,192 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	List<Integer> row = new ArrayList<>();
+	List<Integer> col = new ArrayList<>();
+
+	int N;
+	int M;
+	int K;
+
+	int map[][];
+
+	boolean visit[][];
+
+	int top = 1;
+	int bottom = 3;
+
+	int diceR = 1;
+	int diceC = 1;
+
+	int[] dirX = {0, 1, 0, -1};
+	int[] dirY = {-1, 0, 1, 0};
+
+	int count;
+
+	int answer = 0;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//세로크기
+		N = Integer.parseInt(st.nextToken());
+
+		//가로크기
+		M = Integer.parseInt(st.nextToken());
+
+		//이동횟수
+		K = Integer.parseInt(st.nextToken());
+
+		map = new int[N + 1][M + 1];
+		visit = new boolean[N + 1][M + 1];
+
+		//방향
+		//북 동 남 서
+		//0 1 2 3
+		int dir = 1;
+
+		row.add(4);
+		row.add(1);
+		row.add(3);
+		row.add(6);
+
+		col.add(2);
+		col.add(1);
+		col.add(5);
+		col.add(6);
+
+		for (int i = 1; i <= N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 1; j <= M; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+
+		//로직
+
+		for (int i = 0; i < K; i++) {
+			if (rangeCheck(diceR + dirY[dir], diceC + dirX[dir])) {
+				move(dir);
+			} else {
+				dir = rotateReverse(dir);
+				move(dir);
+			}
+
+			if (row.get(bottom) > map[diceR][diceC]) {
+				dir = rotateClock(dir);
+			}
+
+			if (row.get(bottom) < map[diceR][diceC]) {
+				dir = rotateCounterClock(dir);
+			}
+
+			dfs(diceR, diceC);
+			answer = answer + count * map[diceR][diceC];
+
+			count = 0;
+			visit = new boolean[N + 1][M + 1];
+		}
+
+		System.out.println(answer);
+
+
+	}
+
+	public void dfs(int y, int x) {
+		count++;
+		visit[y][x] = true;
+
+		//반복
+		for (int i = 0; i < 4; i++) {
+			int nextX = x + dirX[i];
+			int nextY = y + dirY[i];
+
+			if (rangeCheck(nextY, nextX)) {
+				if ((map[y][x] == map[nextY][nextX]) && visit[nextY][nextX] == false) {
+					dfs(nextY, nextX);
+				}
+			}
+		}
+
+	}
+
+	public boolean rangeCheck(int y, int x) {
+		return (y >= 1 && y <= N && x >= 1 && x <= M);
+	}
+
+	public int rotateReverse(int dir) {
+		return dir = (dir + 2) % 4;
+	}
+
+	public int rotateClock(int dir) {
+		return dir = (dir + 1) % 4;
+	}
+
+	public int rotateCounterClock(int dir) {
+		return dir = (dir - 1 + 4) % 4;
+	}
+
+	public void move(int dir) {
+
+		//븍
+		if (dir == 0) {
+
+			int removed = col.remove(0);
+			col.add(removed);
+
+			//동기화
+			row.set(top, col.get(top));
+			row.set(bottom, col.get(bottom));
+		}
+
+		//동
+		if (dir == 1) {
+
+			int removed = row.remove(row.size() - 1);
+			row.add(0, removed);
+
+			col.set(top, row.get(top));
+			col.set(bottom, row.get(bottom));
+		}
+
+		//남
+		if (dir == 2) {
+
+			int removed = col.remove(col.size() - 1);
+			col.add(0, removed);
+
+			row.set(top, col.get(top));
+			row.set(bottom, col.get(bottom));
+		}
+
+		//서
+		if (dir == 3) {
+			int removed = row.remove(0);
+			row.add(removed);
+
+			//동기화
+			col.set(top, row.get(top));
+			col.set(bottom, row.get(bottom));
+
+		}
+
+		diceR = diceR + dirY[dir];
+		diceC = diceC + dirX[dir];
+
+	}
+
+}
+
+
