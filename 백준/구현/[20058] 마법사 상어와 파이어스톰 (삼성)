@@ -1,0 +1,208 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	int Q;
+	int M;
+
+	int cellSize;
+
+	int[][] map;
+	boolean[][] visit;
+
+	int[] L;
+	int[][] copyMap;
+	int[][] reduceIceMap;
+
+	int[] dirX = {1, -1, 0, 0};
+	int[] dirY = {0, 0, 1, -1};
+
+	int sum = 0;
+
+	int iceCount;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//
+		N = Integer.parseInt(st.nextToken());
+
+		//마법횟수
+		Q = Integer.parseInt(st.nextToken());
+
+		//2의 n승
+		M = (int)Math.pow(2, N);
+
+		//map
+		map = new int[M][M];
+		reduceIceMap = new int[M][M];
+		visit = new boolean[M][M];
+		copyMap = new int[M][M];
+		L = new int[Q];
+
+		//입력받기
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < M; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < Q; i++) {
+			L[i] = Integer.parseInt(st.nextToken());
+		}
+
+		//마법시전
+		for (int i = 0; i < Q; i++) {
+			cellSize = (int)Math.pow(2, L[i]);
+
+			//카피맵
+			copy();
+
+			//1. 회전
+			rotate(cellSize);
+
+			//남아있는 얼음의 양 준다
+			reduceIce();
+		}
+
+		// for (int i = 0; i < M; i++) {
+		// 	System.out.println();
+		// 	for (int j = 0; j < M; j++) {
+		// 		System.out.print(map[i][j] + " ");
+		// 	}
+		// }
+
+		//남아있는 얼음의 합
+		sumIce();
+
+		//큰 덩어어리가 차지하는 칸의 개수
+
+		int maxIceCount = 0;
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+				dfs(i, j);
+				maxIceCount = Math.max(iceCount, maxIceCount);
+				iceCount = 0;
+			}
+		}
+
+		System.out.println(sum);
+		System.out.println(maxIceCount);
+
+	}
+
+	public void dfs(int r, int c) {
+		visit[r][c] = true;
+		if(map[r][c] != 0) {
+			iceCount++;
+		}
+
+
+		for (int k = 0; k < 4; k++) {
+			int nextR = r + dirY[k];
+			int nextC = c + dirX[k];
+
+			if (rangeCheck(nextR, nextC)) {
+				if (map[r][c] != 0 && map[nextR][nextC] > 0 && visit[nextR][nextC] == false) {
+					dfs(nextR, nextC);
+				}
+			}
+		}
+
+	}
+
+	public void sumIce() {
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+				sum = sum + map[i][j];
+			}
+		}
+	}
+
+	public void reduceIce() {
+		reduceIceMap = new int[M][M];
+
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+
+				int count = 0;
+				for (int k = 0; k < 4; k++) {
+					int nextR = i + dirY[k];
+					int nextC = j + dirX[k];
+
+					if (rangeCheck(nextR, nextC)) {
+						if (map[nextR][nextC] > 0) {
+							count++;
+						}
+					}
+
+				}
+
+				if (count < 3) {
+					reduceIceMap[i][j] = -1;
+				}
+			}
+		}
+
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+				if (reduceIceMap[i][j] == -1 && map[i][j] > 0) {
+					map[i][j] = map[i][j] - 1;
+				}
+			}
+		}
+
+	}
+
+	public boolean rangeCheck(int r, int c) {
+		return (r >= 0 && r < M && c >= 0 && c < M);
+	}
+
+	public void rotate(int cellSize) {
+		//격자 나누기
+		for (int i = 0; i < M; i = i + cellSize) {
+			for (int j = 0; j < M; j = j + cellSize) {
+				//격자 회전
+				cellRotate(i, j, cellSize);
+
+			}
+		}
+	}
+
+	public void cellRotate(int r, int c, int cellSize) {
+
+		//외부 격자에서 안으로
+		for (int i = 0; i < cellSize; i++) {
+			//4군데의 격자 시계방향 로테이트
+			for (int j = 0; j < cellSize; j++) {
+				map[r + j][c + cellSize - 1 - i] = copyMap[r + i][c + j];
+			}
+		}
+
+	}
+
+	public void copy() {
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < M; j++) {
+				copyMap[i][j] = map[i][j];
+			}
+		}
+	}
+
+}
+
+
+
+
+
