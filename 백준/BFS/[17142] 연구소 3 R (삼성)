@@ -1,0 +1,184 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	int N;
+	int M;
+	int map[][];
+	List<Cell> virusList = new ArrayList();
+	List<Cell> selectedVirus = new ArrayList();
+
+	int[] dirY = {0, 0, 1, -1};
+	int[] dirX = {1, -1, 0, 0};
+
+	int answer = Integer.MAX_VALUE;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//연구소 크기 N
+		N = Integer.parseInt(st.nextToken());
+
+		//바이러스의 개수 M
+		M = Integer.parseInt(st.nextToken());
+
+		//선언
+		map = new int[N][N];
+
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < N; j++) {
+				int value = Integer.parseInt(st.nextToken());
+
+				if (value == 1) {
+					map[i][j] = -1;
+				}
+
+				if (value == 2) {
+					map[i][j] = -2;
+					virusList.add(new Cell(i, j));
+				}
+			}
+		}
+
+
+		//바이러스 m개 선택
+		dfs(0, 0);
+
+		if(answer == Integer.MAX_VALUE) {
+			System.out.println(-1);
+		} else {
+			System.out.println(answer);
+		}
+		//printMap();
+
+	}
+
+	public void dfs(int idx, int depth) {
+
+		//탈출
+		if (depth == M) {
+			bfs();
+			return;
+		}
+
+		//반복
+		for (int i = idx; i < virusList.size(); i++) {
+			selectedVirus.add(virusList.get(i));
+			dfs(i + 1, depth + 1);
+			selectedVirus.remove(selectedVirus.size() - 1);
+		}
+	}
+
+	public void bfs() {
+
+		int[][] copyMap = new int[N][N];
+
+		for (int i = 0; i < N ; i++) {
+			for (int j = 0; j < N; j++) {
+				copyMap[i][j] = map[i][j];
+			}
+		}
+
+		Queue<Cell> que = new LinkedList<>();
+
+		//활성 바이러스는 -3
+		for (int i = 0; i < M; i++) {
+			que.offer(new Cell(selectedVirus.get(i).r, selectedVirus.get(i).c));
+			copyMap[selectedVirus.get(i).r][selectedVirus.get(i).c] = -3;
+		}
+
+		while (!que.isEmpty()) {
+
+			Cell cell = que.poll();
+
+			for (int i = 0; i < 4; i++) {
+				int nextR = cell.r + dirY[i];
+				int nextC = cell.c + dirX[i];
+
+				if (rangeCheck(nextR, nextC)) {
+
+					if (copyMap[cell.r][cell.c] == -3 && (copyMap[nextR][nextC] == 0 || copyMap[nextR][nextC] == -2)) {
+						copyMap[nextR][nextC] = 1;
+						que.offer(new Cell(nextR, nextC));
+						continue;
+					}
+
+					//빈칸이라면
+					if (copyMap[nextR][nextC] == 0 ) {
+						copyMap[nextR][nextC] = copyMap[cell.r][cell.c] + 1;
+						que.offer(new Cell(nextR, nextC));
+					}
+
+					if(copyMap[nextR][nextC] == -2) {
+						copyMap[nextR][nextC] = copyMap[cell.r][cell.c]+1;
+						que.offer(new Cell(nextR, nextC));
+					}
+
+
+				}
+			}
+		}
+
+		for (int i = 0; i < virusList.size(); i++) {
+			copyMap[virusList.get(i).r][virusList.get(i).c] = -2;
+		}
+
+		int count = 0;
+		boolean isSpread = true;
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j <N ; j++) {
+				count = Math.max(count,copyMap[i][j]);
+				if(copyMap[i][j] == 0) {
+					isSpread = false;
+				}
+			}
+		}
+
+
+		if(isSpread){
+
+			answer = Math.min(count,answer);
+		}
+
+	}
+
+	public boolean rangeCheck(int r, int c) {
+		return r >= 0 && r < N && c >= 0 && c < N;
+	}
+
+
+	class Cell {
+		int r;
+		int c;
+
+		public Cell(int r, int c) {
+			this.r = r;
+			this.c = c;
+		}
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
