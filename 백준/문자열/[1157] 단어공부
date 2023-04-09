@@ -1,0 +1,76 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	String str = "";
+	Alphabet[] alphabets;
+
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		str = br.readLine().toUpperCase();
+		alphabets = new Alphabet[26];
+
+		for (int i = 0; i < alphabets.length; i++) {
+			Alphabet alphabet = new Alphabet(i,0);
+			alphabets[i] = alphabet;
+		}
+
+		for (int i = 0; i < str.length(); i++) {
+
+			alphabets[str.charAt(i) -'A'].count++;
+			alphabets[str.charAt(i) -'A'].alphabet = str.charAt(i);
+		}
+
+		Arrays.sort(alphabets,(a,b) -> {
+			if(a.count < b.count) {
+				return 1;
+			} else return -1;
+		});
+
+		if(alphabets[0].count == alphabets[1].count) {
+			System.out.println("?");
+		} else {
+			System.out.println(alphabets[0].alphabet);
+		}
+
+
+
+	}
+
+	class Alphabet {
+		int idx;
+		int count;
+
+		char alphabet;
+		Alphabet(int idx,int count){
+
+		}
+	}
+
+
+
+}
+
+
+
+
+
+
+
+
+
