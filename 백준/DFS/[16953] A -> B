@@ -1,0 +1,64 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
+
+import org.w3c.dom.Node;
+
+public class Main {
+
+	long answer = -2;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		long a = Long.parseLong(st.nextToken());
+		long b = Long.parseLong(st.nextToken());
+
+		dfs(a, b, 0);
+
+			System.out.println(answer + 1);
+	}
+
+	public void dfs(long a, long b, long count) {
+		//탈출
+		if (a > b) {
+			return;
+		}
+
+		if (a == b) {
+			answer = Math.max(count, answer);
+			return;
+		}
+
+		//반복
+		dfs(a * 2, b, count + 1);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(a);
+		sb.append("1");
+		a = Long.parseLong(sb.toString());
+
+		dfs(a, b, count + 1);
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
