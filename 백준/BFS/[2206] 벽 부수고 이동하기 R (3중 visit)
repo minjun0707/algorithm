@@ -1,0 +1,148 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+import org.w3c.dom.Node;
+
+public class Main {
+
+	int N;
+	int M;
+
+	int map[][];
+	int copyMap[][];
+
+	int[] dirR = {0, 0, 1, -1};
+	int[] dirC = {1, -1, 0, 0};
+
+	int answer = Integer.MAX_VALUE;
+
+	List<Node> wallList = new ArrayList<>();
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//세로
+		N = Integer.parseInt(st.nextToken());
+
+		//가로
+		M = Integer.parseInt(st.nextToken());
+		map = new int[N][M];
+
+		for (int i = 0; i < N; i++) {
+			String str = br.readLine();
+
+			for (int j = 0; j < M; j++) {
+				int num = str.charAt(j) - '0';
+				map[i][j] = num;
+			}
+
+		}
+
+		bfs();
+
+	}
+
+	public void bfs() {
+		boolean[][][] visit = new boolean[N][M][2];
+
+		Queue<Node> que = new LinkedList<>();
+		que.offer(new Node(0,0,1,0));
+
+		// 0 이면 방문하지 않는 visit
+		// 1 이면 방을 부신 visit
+
+		visit[0][0][0] = true;
+
+		while (!que.isEmpty()) {
+
+			Node node = que.poll();
+
+			if(node.r == N-1 && node.c == M -1 ) {
+				System.out.println(node.distance);
+				return;
+			}
+
+			for (int i = 0; i < 4; i++) {
+				int nextR = node.r + dirR[i];
+				int nextC = node.c + dirC[i];
+
+				if (rangeCheck(nextR,nextC) == false || visit[nextR][nextC][node.drill] == true) {
+					continue;
+				}
+
+
+
+				//벽이 없으면 탐색
+				if(map[nextR][nextC] == 0 ) {
+					visit[nextR][nextC][node.drill] = true;
+					que.offer(new Node(nextR,nextC, node.distance + 1, node.drill ));
+				}
+
+
+				//벽을 만나면 부순다
+				else if(map[nextR][nextC] == 1) {
+
+					//벽을 안부순 상태면 부슨다
+					if(node.drill == 0) {
+						visit[nextR][nextC][1] = true;
+						que.offer(new Node(nextR,nextC, node.distance + 1, 1 ));
+					}
+				}
+			}
+
+
+		}
+
+		System.out.println(-1);
+
+
+
+
+	}
+
+	public boolean rangeCheck(int r, int c) {
+		return r >= 0 && r < N && c >= 0 && c < M;
+
+	}
+
+	class Node {
+		int r;
+		int c;
+
+		int distance;
+		int drill;
+
+		public Node(int r, int c,int distance, int drill) {
+			this.r = r;
+			this.c = c;
+			this.distance = distance;
+			this.drill = drill;
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
