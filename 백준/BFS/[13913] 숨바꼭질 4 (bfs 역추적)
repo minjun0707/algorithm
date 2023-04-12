@@ -1,0 +1,113 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import org.w3c.dom.Node;
+
+public class Main {
+
+	int N;
+	int K;
+	int visit[];
+	int tracking[];
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		N = Integer.parseInt(st.nextToken());
+		K = Integer.parseInt(st.nextToken());
+
+		tracking = new int[1000001];
+		visit = new int[1000001];
+
+
+
+		if(N>= K) {
+			System.out.println(N-K);
+			//이동방법 역추척
+			//N~K
+			for (int i = N; i >= K; i--) {
+				sb.append(i + " ");
+			}
+			System.out.println(sb.toString().trim());
+			return;
+		}
+
+		bfs();
+
+	}
+
+	public void bfs() {
+		Queue<Integer> que = new LinkedList();
+
+		que.offer(N);
+		visit[N] = 1;
+		tracking[N] = -1;
+
+		while (!que.isEmpty()) {
+			int num = que.poll();
+
+			if(num == K){
+				System.out.println(visit[num]-1);
+
+				//백트랙킹
+				StringBuilder sb = new StringBuilder();
+
+				int i =num;
+				List list = new ArrayList<>();
+				list.add(num);
+				while (true) {
+					i = tracking[i];
+					if(i == -1) {
+						break;
+					}
+					list.add(i);
+				}
+
+				for (int j = list.size()-1; j >=0 ; j--) {
+					sb.append(list.get(j) + " ");
+				}
+
+				System.out.println(sb.toString().trim());
+
+				return;
+			}
+
+			int[] move = new int[]{2*num,num-1,num+1};
+			for (int i = 0; i < 3; i++) {
+				int next = move[i];
+
+				if(next < 0 || next > 100000) {
+					continue;
+				}
+
+				//방문하지 않았다면
+				if(visit[next] == 0) {
+					visit[next] = visit[num] +1;
+					tracking[next] = num;
+					que.offer(next);
+				}
+			}
+
+
+		}
+
+	}
+}
