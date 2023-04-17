@@ -1,0 +1,28 @@
+import java.util.*;
+
+class Solution {
+    public int solution(String s) {
+        Map<String,String> word = new HashMap<>();
+        
+        word.put("one","1");
+         word.put("two","2");
+         word.put("three","3");
+         word.put("four","4");
+         word.put("five","5");
+         word.put("six","6");
+         word.put("seven","7");
+         word.put("eight","8");
+         word.put("nine","9");
+         word.put("zero","0");
+        
+        for(String s1 : word.keySet()) {
+            
+            String num = word.get(s1); 
+            s= s.replaceAll(s1,num);
+        }
+        
+        
+        return Integer.parseInt(s);
+        
+    }
+}
