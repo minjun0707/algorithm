@@ -1,0 +1,95 @@
+import java.util.*;
+
+class Solution {
+    
+    public String solution(int[] numbers, String hand) {
+        
+		StringBuilder sb = new StringBuilder();
+
+		//손의 위치
+		Hand leftHand = new Hand(3, 0);
+		Hand rightHand = new Hand(3, 2);
+
+		for (int i = 0; i < numbers.length; i++) {
+			int click = numbers[i];
+
+			//왼손으로 클릭
+			if (click == 1 || click == 4 || click == 7) {
+
+				//손가락 위치 업데이트
+				leftHand.r = click / 3;
+				leftHand.c = 0;
+
+				//String에 추가
+				sb.append("L");
+
+			} else if (click == 3 || click == 6 || click == 9) {
+
+				rightHand.r = click / 3 - 1;
+				rightHand.c = 2;
+
+				sb.append("R");
+			}
+			// 2580 * #
+			else {
+				String useHand = "";
+				int handR = 0;
+				int handC = 1;
+                
+				if (click == 2 || click == 5 || click == 8) {
+					handR = click / 3;
+				} else if (click == 0) {
+					handR = 3;
+				}
+
+				//거리비교
+				//오른손이 더 가까우면
+				if (Math.abs(leftHand.r - handR) + Math.abs(leftHand.c - handC)
+					> Math.abs(rightHand.r - handR) + Math.abs(rightHand.c - handC)) {
+
+					useHand = "R";
+				} else if (Math.abs(leftHand.r - handR) + Math.abs(leftHand.c - handC)
+					< Math.abs(rightHand.r - handR) + Math.abs(rightHand.c - handC)) {
+					useHand = "L";
+
+				} else {
+					if (hand.equals("right")) {
+						useHand = "R";
+					} else if (hand.equals("left")) {
+						useHand = "L";
+					}
+				}
+
+				if (useHand.equals("R") ) {
+					sb.append("R");
+					rightHand.r = handR;
+					rightHand.c = handC;
+				} else if (useHand.equals("L")) {
+					sb.append("L");
+					leftHand.r = handR;
+					leftHand.c = handC;
+				}
+
+			}
+
+		}
+
+
+        String str = sb.toString();
+        return str;
+       
+    }
+
+    
+   class Hand {
+		int r;
+		int c;
+
+		Hand(int r, int c) {
+			this.r = r;
+			this.c = c;
+		}
+	}
+    
+       
+}
