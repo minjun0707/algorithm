@@ -1,0 +1,56 @@
+class Solution {
+    public int solution(String dartResult) {
+      
+        double lastBefore =0;
+        double before =0;
+        double point =0;
+        
+        int count =0;
+        
+        dartResult = dartResult.replaceAll("10","a");
+    
+        for(int i =0; i < dartResult.length();i++){
+    
+            char c =dartResult.charAt(i);
+            
+            // 숫자이면
+            if(Character.isDigit(c) || c == 'a') {
+                count++;
+                
+                if(count == 3) {
+                    lastBefore = before;
+                }
+                
+                before = point;
+                if( c=='a') {
+                    point = 10;
+                }
+                else {point = c - '0';
+                 }
+                
+            } 
+            
+            else if(c == 'S') {
+                point = Math.pow(point,1);
+                
+            } else if(c == 'D') {
+                point = Math.pow(point,2);
+                
+            } else if(c == 'T') {
+                point = Math.pow(point,3);
+                
+            }  else if(c == '*') {
+                before = before * 2;
+                point = point * 2;
+                
+            }  else if(c == '#') {
+                point = -point;
+            }
+            
+            
+        }
+        
+        int answer=(int)lastBefore + (int)before + (int)point;
+        return answer;
+    }
+}
