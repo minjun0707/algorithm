@@ -1,0 +1,89 @@
+import java.util.*;
+class Solution {
+    public String solution(String[] survey, int[] choices) {
+        
+        Map<String,Integer> map = new HashMap<>();
+        map.put("RT",0);
+        map.put("CF",0);
+        map.put("JM",0);
+        map.put("AN",0);
+        
+        
+        
+        int[] score = new int[]{0,3,2,1,0,-1,-2,-3};
+        
+        for(int i =0; i < choices.length;i++) {
+            if(survey[i].charAt(0) == 'R'){
+               map.put("RT",map.get("RT") + score[choices[i]]); 
+            }
+            else if(survey[i].charAt(0) == 'T') {
+                map.put("RT",map.get("RT") + -1 * score[choices[i]]); 
+            }
+            
+            else if(survey[i].charAt(0) == 'C'){
+               map.put("CF",map.get("CF") + score[choices[i]]); 
+            }
+           else  if(survey[i].charAt(0) == 'F') {
+                map.put("CF",map.get("CF") + -1 * score[choices[i]]); 
+            }
+            
+            else if(survey[i].charAt(0) == 'J'){
+               map.put("JM",map.get("JM") + score[choices[i]]); 
+            }
+           else  if(survey[i].charAt(0) == 'M') {
+                map.put("JM",map.get("JM") + -1 * score[choices[i]]); 
+            }
+            
+           else if(survey[i].charAt(0) == 'A'){
+               map.put("AN",map.get("AN") + score[choices[i]]); 
+            }
+            else if(survey[i].charAt(0) == 'N') {
+        
+                map.put("AN",map.get("AN") + -1 * score[choices[i]]); 
+            }      
+        }
+        
+        System.out.println(map.get("RT"));
+        System.out.println(map.get("CF"));
+        System.out.println(map.get("JM"));
+        System.out.println(map.get("AN"));
+        
+        StringBuilder sb = new StringBuilder();
+        
+        if(map.get("RT") > 0) {
+            sb.append("R");
+        } else if(map.get("RT") < 0){
+            sb.append("T");
+        } else {
+             sb.append("R");
+        }
+        
+         if(map.get("CF") > 0) {
+            sb.append("C");
+        } else if(map.get("CF") < 0){
+            sb.append("F");
+        } else {
+             sb.append("C");
+        }
+        
+         if(map.get("JM") > 0) {
+            sb.append("J");
+        } else if(map.get("JM") < 0){
+            sb.append("M");
+        } else {
+             sb.append("J");
+        }
+        
+         if(map.get("AN") > 0) {
+            sb.append("A");
+        } else if(map.get("AN") < 0){
+            sb.append("N");
+        } else {
+             sb.append("A");
+        }
+        
+         return sb.toString();
+    }
+    
+ 
+}
