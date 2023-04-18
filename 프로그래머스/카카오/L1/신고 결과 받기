@@ -1,0 +1,43 @@
+import java.util.*;
+
+class Solution {
+    public int[] solution(String[] id_list, String[] report, int k) {
+        Map<String, Integer> reportNumber = new LinkedHashMap<>();
+        for(String s : id_list) {
+            reportNumber.put(s,0);
+        }
+
+
+
+        Map<String,Set> reportResultMap = new HashMap<>();
+        for(String s : id_list) {
+            Set<String> reporters = new HashSet<>();
+            reportResultMap.put(s,reporters);
+        }
+
+        for (String s : report) {
+            String[] splitBySpace = s.split(" ");
+            reportResultMap.get(splitBySpace[1]).add(splitBySpace[0]);
+        }
+
+
+        for (Set value : reportResultMap.values()) {
+            if(value.size() >=k) {
+                for (Object o : value) {
+                    Integer integer = reportNumber.get(o)+1;
+                    reportNumber.put((String) o,integer);
+                }
+            }
+        }
+
+        int answer[] = new int[id_list.length];
+
+        int i = 0;
+        for (Integer value : reportNumber.values()) {
+            answer[i] = value;
+            i++;
+        }
+        
+        return answer;
+    }
+}
