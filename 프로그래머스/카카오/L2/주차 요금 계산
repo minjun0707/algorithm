@@ -1,0 +1,86 @@
+import java.util.*;
+class Solution {
+    
+    public int[] solution(int[] fees, String[] records) {
+        //차량번호, 입출고 시간
+        Map<Integer, String> baseMap = new HashMap<>();
+
+        //차량번호, 누적시간
+        Map<Integer,Integer> timeMap =new HashMap<>();
+
+
+        int baseTime = fees[0];
+        int baseFee = fees[1];
+        int timePerMinute = fees[2];
+        int feePerTime = fees[3];
+        int minute = 0;
+
+        for (String recode : records) {
+            String[] s = recode.split(" ");
+            Integer carNumber  = Integer.valueOf(s[1]);
+            //OUT
+            if(s[2].equals("OUT")) {
+                minute = getMinute(baseMap.get(carNumber), s[0]);
+                //누적시간으로 더하기
+                timeMap.put(carNumber,timeMap.getOrDefault(carNumber,0)+minute);
+                baseMap.remove(carNumber);
+            }
+
+            //차량번호, 입고 시간  (IN)
+            else {
+                baseMap.put(carNumber,s[0]);
+            }
+        }
+
+        //out 없는 애들 시간
+        //base map에서 제거되지 않는애들
+
+        for (Integer s : baseMap.keySet()) {
+            minute = getMinute(baseMap.get(s),"23:59");
+            timeMap.put(s,timeMap.getOrDefault(s,0)+minute);
+        }
+
+        
+
+        //요금 계산 대신 하면서 answer에 답을 넣는데 차량번호가 작은 순서대
+        Object[] objects = timeMap.keySet().toArray();
+        Arrays.sort(objects);
+
+        int answer[] = new int[timeMap.size()];
+        int i = 0;
+        for (Object object : objects) {
+            Integer time = timeMap.get(object);
+            int totalTime = baseFee + (int)(Math.ceil(Math.max(0,((double)time - baseTime) / timePerMinute )) * feePerTime);
+            answer[i] = totalTime;
+            i++;
+        }
+        return answer;
+       
+    }
+    
+    public static int getMinute(String inTime, String outTime ) {
+        String[] splits = inTime.split(":");
+        Integer inHour = Integer.valueOf(splits[0]);
+        Integer inMinute = Integer.valueOf(splits[1]);
+
+        splits = outTime.split(":");
+        Integer outHour = Integer.valueOf(splits[0]);
+        Integer outMinute = Integer.valueOf(splits[1]);
+
+        int minute = 0;
+        int hour = outHour - inHour;
+        if(hour == 0) {
+            hour = 0;
+            minute = outMinute - inMinute;
+        } else {
+            minute = outMinute - inMinute;
+            if(minute < 0) {
+                hour--;
+            }
+
+            minute = (60 + minute) %  60;
+        }
+
+        return (60*hour + minute);
+    }
+}
