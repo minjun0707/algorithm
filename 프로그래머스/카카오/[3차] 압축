@@ -1,0 +1,64 @@
+import java.util.*;
+
+class Solution {
+    public int[] solution(String msg) {
+        
+        int index = 26;
+        //단어, 색인번호
+        Map<String,Integer> indexMap = new LinkedHashMap<>();
+        List<String> list = new ArrayList<>();
+        
+        for(int i=1; i<=26; i++) {
+            int c = 64 + i;
+            indexMap.put(String.valueOf((char)c), i);
+        }
+        
+     
+            //탈출조건 만들기
+            
+            for(int i=0; i<msg.length() ;i++){
+               
+                String c = msg.substring(0,i+1);
+               
+                  
+                //같으면 한번더 탐색
+                if(indexMap.getOrDefault(c,0) !=0) {
+                    //마지막일 때
+                    if(i+1 == msg.length()){
+                        list.add(c);
+                        break;
+                    }
+                    
+                }
+
+                // 인덱스에 해당 String이 없으면
+                else {
+
+                    c = msg.substring(0,i);
+                
+                    
+                   
+                    list.add(c);
+                    
+                    //이전까지 탐색한 string을 삭제
+                    msg = msg.replaceFirst(c,"");
+                    
+                    
+                     //이전까지 탐색한 string + 다음 string을 index 에 넣는다
+                    indexMap.put(c+msg.substring(0,1),++index);
+                  
+                    i=-1;
+                }
+                
+            }
+
+        
+        int[] answer = new int[list.size()];
+        for(int i=0; i< list.size(); i++){
+            answer[i] = indexMap.get(list.get(i));
+        }
+        
+        
+        return answer;
+    }
+}

@@ -1,41 +1,74 @@
-import java.util.*;
 
-class Solution {
-    public int solution(int n, int k) {
-        StringBuilder sb = new StringBuilder();
 
-        while (n>0) {
 
+
+// import java.util.*;
+
+// class Solution {
     
+//     public int solution(int n, int k) {
+        
+//         //자기 자신으로만 나누어 지는 수를 소수라고한다. 1과 자기자신으로만 나누어지는 수
+//         //23
+        
+        
+//         String num = Integer.toString(n,k);
+//         String[] split = num.split("0");
+        
+//         List<String> primeList = new ArrayList<>();
+        
+//         for(int i=0; i < split.length; i++){
+//             if(split[i].equals("")) {
+//                 continue;
+//             } 
+//             else if(isPrime(split[i])) {
+//                 primeList.add(split[i]);
+//             }  
+//         }
+        
+//         int answer = 0;
+//         for(int i=0; i<primeList.size(); i++) {
+//            String nowNum = primeList.get(i);
             
-            sb.append(n % k);
-            n = n / k;
-        }
-
+//             if(num.contains("0" +nowNum +"0")) {      
+//                 answer++;
+//             }
+                
+//             else if(num.indexOf(nowNum+"0") == 0) {
+//                  answer++;
+//             }
+            
+//             else if(num.indexOf("0"+nowNum) + nowNum.length() + 1== num.length()) {  
+//                 answer++;
+//             } 
+            
+//             else if(num.equals(nowNum)) {
+//                 answer++;
+//             }
+            
+//         }
+                
         
-
-        String[] s1 = sb.reverse().toString().split("0");
-
-        int answer = 0;
-        
-        for (String s2 : s1) {
-            if(s2.equals("")) continue;
-            if (Long.parseLong(s2) != 1) {
-                if (findPN(Long.parseLong(s2))) {
-                    answer++;
-                }
-            }
-        }
-
-        return answer;
-    }
+//         return answer;
+//     }
     
-    public boolean findPN(Long num) {
-        for (int i = 2; i <= (int)Math.sqrt(num); i++) {
-            if (num % i == 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
+//     public boolean isPrime(String strNum) {
+        
+//         long num = Long.parseLong(strNum);
+
+//         if(num == 1) {
+//             return false;
+//         }
+        
+//         for(int i=2; i<= Math.sqrt(num); i++) {
+//             if(num % i == 0) {
+//                 return false;
+//             }
+//         }
+        
+//         return true;
+        
+//     }
+    
+    
+// }
