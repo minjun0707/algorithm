@@ -1,0 +1,57 @@
+import java.util.*;
+class Solution {
+    public String[] solution(String[] record) {
+        
+        String[][] actionIdArr = new String[record.length][2];
+        Map<String,String> idNameMap = new HashMap<>();
+        
+        for(int i=0; i< record.length; i++){
+            String[] arr = record[i].split(" ");
+            String action = arr[0];
+            String uid = arr[1];
+            
+            if(action.equals("Enter") || action.equals("Change")){
+                String name = arr[2];
+                
+                idNameMap.put(uid,name);
+            }
+            
+            actionIdArr[i][0] = action;
+            actionIdArr[i][1] = uid;
+        }
+        
+        int count =0;
+        for(int i=0; i < actionIdArr.length;i++){
+           if(actionIdArr[i][0].equals("Change")){
+               continue;
+           }
+            count++;
+        }
+        
+        String[] msg = new String[count];
+        
+        count = 0;
+        for(int i =0; i < actionIdArr.length;i++){
+            if(actionIdArr[i][0].equals("Change")) {
+                continue;
+            }
+            
+             String str = "";
+           if(actionIdArr[i][0].equals("Enter")){
+            str = idNameMap.get(actionIdArr[i][1]) + "님이 들어왔습니다.";
+           } else {
+            str = idNameMap.get(actionIdArr[i][1]) + "님이 나갔습니다.";
+           }
+             
+            msg[count++] = str;
+        }
+        
+        
+        
+        
+        
+        
+        
+        return msg;
+    }
+}
