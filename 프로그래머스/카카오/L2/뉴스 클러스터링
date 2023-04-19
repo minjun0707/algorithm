@@ -1,0 +1,59 @@
+import java.util.*;
+class Solution {
+    public int solution(String str1, String str2) {
+        String pattern = "[^a-zA-Z]";
+
+        List<String> str1List = new ArrayList<String>();
+        List<String> str2List = new ArrayList<String>();
+
+        for (int i = 0; i < str1.length() - 1; i++) {
+            String element = str1.substring(i, i + 2).replaceAll(pattern, "").toLowerCase();
+            if(element.length()==2) {
+                str1List.add(element);
+            }
+        }
+
+        for (int i = 0; i < str2.length() - 1; i++) {
+            String element = str2.substring(i, i + 2).replaceAll(pattern, "").toLowerCase();
+            if(element.length()==2) {
+                str2List.add(element);
+            }
+        }
+
+        if(str1List.size() < str2List.size()) {
+            List<String> temp = str1List;
+            str1List = str2List;
+            str2List = temp;
+        }
+
+
+        //합집합
+        List<String> union = new ArrayList<String>(str1List);
+        //교집합
+        List<String> intersection = new ArrayList<String>();
+
+
+        for (String s2 : str2List) {
+            //합집합
+            //배열의 길이가 더 긴 str1list 에서 str1list에 없는 str2list의 요소를 더한다.
+            //plus가 1이면 str2list의 요소가 str1리스트에 없고 그 개수가 1개
+                if(Collections.frequency(union, s2) < Collections.frequency(str2List,s2))
+                union.add(s2);
+
+            //교집합
+            if (Collections.frequency(intersection, s2) <
+                        Math.min(Collections.frequency(str1List, s2),
+                                Collections.frequency(str2List, s2)))
+                    intersection.add(s2);
+        }
+
+        int answer = 0;
+        if(union.size() == 0)  {
+          return 65536;
+        }
+        
+       
+        return ((int)(intersection.size() / (double)union.size() * 65536));
+    
+    }
+}
