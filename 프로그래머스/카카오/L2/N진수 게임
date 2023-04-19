@@ -1,0 +1,37 @@
+import java.util.*;
+
+class Solution {
+    public String solution(int n, int t, int m, int p) {
+        
+        //n 진법, 미리 구할 숫자의 개수 t, 게임에 참가하는 인원 m , 튜브의 순서 p
+        StringBuilder sb = new StringBuilder();
+        
+        for(int i=0; i<=100000; i++) {
+            sb.append(Integer.toString(i,n));
+            
+            if(sb.length() >= 100000) {
+                break;
+            }
+            
+        }
+        
+        
+        
+        int count = 0;
+        StringBuilder answer = new StringBuilder();
+        while(true) {
+            
+            answer.append(sb.charAt(p-1+count * m));
+        
+            count++;
+            
+             if(count == t) {
+                break;
+            }
+        }
+      
+        
+        
+        return answer.toString().toUpperCase();
+    }
+}
