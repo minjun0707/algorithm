@@ -1,0 +1,110 @@
+import java.util.*;
+class Solution {
+    public int solution(int m, int n, String[] board) {
+       String[][] table = new String[m][n];
+
+        for (int i = 0; i < m; i++) {
+            String[] splits = board[i].split("");
+            for (int j = 0; j < n; j++) {
+                table[i][j] = splits[j];
+            }
+        }
+
+
+
+        int answer = 0;
+        int trueCount = 0;
+        loopOut:
+        while (true) {
+            trueCount = 0;
+            //지워야될블럭을 찾고 true
+            for (int i = 0; i < m - 1; i++) {
+                for (int j = 0; j < n - 1; j++) {
+                    if(table[i][j].equals("0")) {
+                        continue;
+                    }
+                    if (isDeleteBlock(table, i, j)) {
+                        table[i][j] = "1";
+                        trueCount++;
+                    }
+                }
+            }
+
+            if(trueCount ==0) {
+                break loopOut;
+            }
+
+
+
+            //true인 블럭 삭제
+            for (int i = 0; i < m - 1; i++) {
+                for (int j = 0; j < n - 1; j++) {
+
+                    if (table[i][j].equals("1")) {
+                        table[i][j] = "0";
+
+                        if (!table[i][j + 1].equals("1")) {
+                            table[i][j + 1] = "0";
+                        }
+
+                        if (!table[i + 1][j + 1].equals("1")) {
+                            table[i + 1][j + 1] = "0";
+                        }
+                        if (!table[i + 1][j].equals("1")) {
+                            table[i + 1][j] = "0";
+                        }
+                    }
+                }
+            }
+
+            // 층 내리기
+
+            answer = 0;
+            for (int i = 0; i < n; i++) {
+                List<String> temp = new ArrayList<>();
+                for (int j = m - 1; j >= 0; j--) {
+                    if (!table[j][i].equals("0")) {
+                        temp.add(table[j][i]);
+                    }
+                }
+
+                answer = answer + m -temp.size();
+                //temp의 사이즈는 세로길이 - 0의개수 = temp.size()
+                //0의 개수는 temp.size() - 세로길이(m)
+
+                for (int k = 0; k < m; k++) {
+                    if (temp.size() == 0) {
+                        break;
+                    }
+
+                    if (k < temp.size()) {
+                        table[m-1 - k][i] = temp.get(k);
+                    } else {
+                        table[m-1 - k][i] = "0";
+                    }
+                }
+            }
+
+
+
+        } 
+        return answer;
+    }
+    public static boolean isDeleteBlock(String[][] table, int i, int j) {
+
+
+        if (!table[i][j].equals(table[i][j + 1])) {
+            return false;
+        }
+
+        if (!table[i][j].equals(table[i + 1][j + 1])) {
+            return false;
+        }
+
+        if (!table[i][j].equals(table[i +1][j])) {
+            return false;
+        }
+
+        return true;
+    }
+}
