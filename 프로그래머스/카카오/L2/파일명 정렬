@@ -1,0 +1,54 @@
+import java.util.*;
+class Solution {
+    public String[] solution(String[] files) {
+        Arrays.sort(files,(s1,s2) -> {
+            String[] file1 = splitFile(s1);
+            String[] file2 = splitFile(s2);;
+
+            int headValue = file1[0].toLowerCase().compareTo(file2[0].toLowerCase());
+
+            //head 사전식이 같으면 Number 비교
+            if(headValue == 0 ) {
+                headValue = Integer.parseInt(file1[1]) - Integer.parseInt(file2[1]);
+
+            }
+
+            return headValue;
+
+        });
+
+         String[] answer = files;
+         return answer;
+    }
+    
+    
+    
+    public static String[] splitFile(String s) {
+        String[] split = new String[3];
+        int count =0;
+        int firstIdx = 0;
+        for(int i=0; i<s.length();i++) {
+            char c = s.charAt(i);
+
+            //처음숫자라면
+            if(count == 0 && Character.isDigit(c)) {
+                split[0] = s.substring(0,i);
+                firstIdx = i;
+                count++;
+            }
+
+            if(count == 1 && !Character.isDigit(c)) {
+                split[1] = s.substring(firstIdx,i);
+                split[2] = s.substring(i);
+                break;
+            }
+            
+            if(count == 1 && i == s.length()-1) {
+                split[1] = s.substring(firstIdx);
+                split[2] = "";
+            }
+        }
+
+        return split;
+    }
+}
