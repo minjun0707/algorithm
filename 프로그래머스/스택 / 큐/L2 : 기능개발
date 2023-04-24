@@ -1,0 +1,42 @@
+import java.util.*;
+class Solution {
+    public int[] solution(int[] progresses, int[] speeds) {
+        
+        int[] dayOfend = new int[100];
+        
+        //모든 기능을 모아둔다.
+        List<Integer> list = new ArrayList<>();
+       
+        
+        for(int i=0; i < progresses.length; i++){
+            list.add(  (int) Math.ceil((100- progresses[i] )/ (double)speeds[i]) );
+        }
+        
+        int day = -1;
+        
+        for(int i=0; i<list.size(); i++){
+            
+            while(list.get(i) - day >0) {
+                 day++;
+            }
+            
+            dayOfend[day]++;
+           
+        }
+        
+        List<Integer> answerList = new ArrayList<>();
+        for(int i=0; i < dayOfend.length; i++){
+            if(dayOfend[i] != 0){
+                answerList.add(dayOfend[i]);
+            }
+        }
+        
+        int answer[] = new int[answerList.size()];
+        for(int i : answerList) {
+            answer[i] = answerList.get(i);
+        }
+        
+        return answer;
+       
+    }
+}
