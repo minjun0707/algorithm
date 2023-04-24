@@ -1,0 +1,105 @@
+import java.util.*;
+
+class Solution {
+    public int[] solution(String[] genres, int[] plays) {
+        
+        HashMap<String,Integer> genrePlaysMap = new HashMap<>();
+        List<Song> songList = new ArrayList<>();
+        
+        //장르별 재생횟수 map
+        for(int i=0; i < genres.length; i++) {
+            genrePlaysMap.put(genres[i],  genrePlaysMap.getOrDefault(genres[i],0) + plays[i]);
+            songList.add(new Song(genres[i],plays[i],i));
+        }
+        
+        
+        //장르렬 재생횟수 list
+        List<GenrePlays> genrePlaysList = new ArrayList<>();
+        
+        for(String s : genrePlaysMap.keySet()) {
+           genrePlaysList.add(new GenrePlays(s,genrePlaysMap.get(s)));
+        }
+        
+         //장르렬 재생횟수 list 내림차순 정렬
+        Collections.sort(genrePlaysList,(a,b) -> {
+            if(a.plays > b.plays) {
+                return -1;
+            } else if(a.plays < b.plays) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+        
+         List<Integer> answerList = new ArrayList<>();
+        for(int i=0; i<genrePlaysList.size(); i++) {
+
+            List<Song> tempList = new ArrayList<>();
+            
+            for(int j=0; j < songList.size(); j++){
+                //장르의 이름이 같으면
+                if(genrePlaysList.get(i).genre.equals(songList.get(j).genre) ) {
+                    tempList.add(songList.get(j));
+                }
+            }
+            
+            //동일한 장르만 모아논 임시 리스트 정렬
+            Collections.sort(tempList,(a,b) -> {
+                if(a.plays > b.plays) {
+                    return -1;
+                } else if(a.plays < b.plays) {
+                    return 1;
+                } else {
+                    if(a.idx > b.idx) {
+                        return 1;
+                    } else if(a.idx < b.idx) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+            
+             if(tempList.size() == 1){
+                 answerList.add(tempList.get(0).idx);
+             } else if(tempList.size() >= 2) {
+                 answerList.add(tempList.get(0).idx);
+                 answerList.add(tempList.get(1).idx);
+             }
+        }
+        
+          int[] answer = new int[answerList.size()];
+       for(int i=0; i < answerList.size(); i++){
+           answer[i] = answerList.get(i);
+       }
+        
+        
+
+      
+        return answer;
+    }
+    
+    class Song {
+        String genre;
+        int plays;
+        int idx;
+        
+            
+        Song(String genre, int plays, int idx){
+            this.genre = genre;
+            this.plays = plays;
+            this.idx = idx;
+        }
+        
+    }
+    
+    class GenrePlays {
+        String genre;
+        int plays;
+        
+        GenrePlays(String genre, int plays){
+            this.genre = genre;
+            this.plays = plays;
+        }
+    }
+}
