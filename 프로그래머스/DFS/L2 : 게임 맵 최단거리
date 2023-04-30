@@ -1,0 +1,78 @@
+import java.util.*;
+
+class Solution {
+    
+    int[] dirX = {1,-1,0,0};
+    int[] dirY = {0,0,1,-1};
+    int rLen = 0;
+    int cLen = 0;
+    boolean visit[][];
+    int answer = 0;
+    int map[][];
+    public int solution(int[][] maps) {
+        
+        rLen = maps.length; 
+        cLen = maps[0].length;
+        
+        map = maps;
+        
+        visit = new boolean[rLen][cLen];
+        bfs();
+        
+        if(answer == 0) {
+            answer = -1;
+        }
+        
+        return answer;
+    }
+    
+    public void bfs() {
+        Node node = new Node(0,0,1);
+        visit[0][0] = true;
+        Queue<Node> que = new LinkedList<>();
+        
+        que.offer(node);
+        
+        while(!que.isEmpty()){
+            Node now = que.poll();
+            
+            if(now.r == rLen -1 && now.c == cLen -1) {
+                answer = now.cost;
+                return;
+            }
+            
+            for(int i=0; i<4; i++){
+                int nextR = now.r + dirX[i];
+                int nextC = now.c + dirY[i];
+                
+                if(isInRange(nextR,nextC) == false || map[nextR][nextC] == 0 || visit[nextR][nextC]) {
+                    continue;
+                }
+                
+                visit[nextR][nextC] = true;
+                que.offer(new Node(nextR,nextC,now.cost+1));
+                
+            }
+            
+            
+        }
+        
+        
+    }
+    
+    public boolean isInRange(int r, int c) {
+        return r>=0 && r < rLen && c>=0 && c< cLen ;
+    }
+    
+    class Node {
+        int r;
+        int c;
+        int cost;
+        
+        Node(int r, int c, int cost) {
+            this.r = r;
+            this.c = c;
+            this.cost = cost;
+        }
+    }
+}
