@@ -1,0 +1,66 @@
+import java.util.*;
+class Solution {
+    int depth = 0;
+    int primeCount = 0;
+    HashSet<Integer> set = new HashSet();
+    boolean[] visit;
+    String number;
+        
+    public int solution(String numbers) {
+        
+        number = numbers;
+        //numbers의 길이만큼
+        for(int i=1; i<= numbers.length(); i++) {
+            depth = i;
+            visit = new boolean[numbers.length()];
+            dfs("",0);
+        }
+        
+        // string을 integer로
+        
+        // integer에 따라 조합
+        
+        // 소수찾기
+        int answer = set.size();
+        return answer;
+    }
+    
+    //순서 상관 있어
+    public void dfs(String str, int idx) {
+        
+        //탈출
+        if(str.length() == depth) {
+            //소수판별
+            int num =Integer.parseInt(str);
+            if(isPrime(num)) {
+                set.add(num);
+            }
+        }
+        
+        
+        //반복
+        for(int i=0; i< number.length() ; i++) {
+            if(visit[i] == false) {
+                visit[i] = true;
+                dfs(str+number.charAt(i), idx+1);
+                visit[i] = false;
+            }
+        }
+    }
+    
+    public boolean isPrime(int num) {
+        
+        if(num < 2) return false;
+        //2는 유일한 짝수 소수다
+        if(num == 2) return true;
+       
+        for(int i=2; i< Math.sqrt(num); i++) {
+            //나누어 지면 소수가 아니다
+            if(num % i == 0) {
+                return false;
+            }
+        }
+        
+        return true;
+    } 
+}
