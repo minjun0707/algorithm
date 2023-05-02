@@ -1,0 +1,29 @@
+class Solution {
+    public int[] solution(int brown, int yellow) {
+        
+        //갈색 개수는 세로열 * 2 가로열 * 2 - 4
+        int[] answer = new int[2];
+        
+        int sum = brown + yellow;
+        
+        for(int i =1; i<= sum; i++) {
+            if(sum % i != 0) {
+                continue;
+            }
+            int row = i;
+            int col = sum / row;
+            
+            if(row >= col){
+                if(col >= 3) {
+                    if(brown == row *2 + col *2 -4){
+                        answer[0] = row;
+                        answer[1] = col;   
+                    }
+                }
+            }
+        }
+        
+        
+        return answer;
+    }
+}
