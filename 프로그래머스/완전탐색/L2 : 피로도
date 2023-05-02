@@ -1,0 +1,30 @@
+class Solution {
+    
+    boolean visit[];
+    int answer = 0;
+    public int solution(int k, int[][] dungeons) {
+        
+        visit = new boolean[dungeons.length];
+        
+        //던전배열, 현재방문위치, 목숨, 던전방문횟수
+        dfs(dungeons,k,0);
+        
+        return answer;
+    }
+    
+    public void dfs(int[][] dungeons,int life,int count) {
+        
+        for(int i=0; i<dungeons.length; i++) {
+            if(visit[i] == false && dungeons[i][0] <= life) {
+                visit[i] = true;
+                dfs(dungeons, life-dungeons[i][1], count+1);
+                visit[i] = false;
+            }
+        }
+        
+        answer = Math.max(answer,count);
+        
+        
+            
+    }
+} 
