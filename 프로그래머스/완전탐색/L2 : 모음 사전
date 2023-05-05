@@ -1,0 +1,36 @@
+class Solution {
+    
+    //몇번째 개수
+    int answer = 0;
+    String sWord;
+    String allWord = "AEIOU";
+    int count = 0;
+    
+    public int solution(String word) {
+        sWord = word;
+        
+        dfs("");
+        return answer;
+    }
+    
+    public void dfs(String nowWord) {
+        
+        if(nowWord.equals(sWord) || nowWord.length() == 5) {
+            if(nowWord.equals(sWord)) {
+                answer = count;
+                return ;
+            }
+            
+            return;
+        }
+        
+        
+        for(int i=0; i <allWord.length(); i++) {
+            count++;
+            dfs(nowWord+allWord.charAt(i));
+        }
+        
+    }
+    
+    
+}
