@@ -1,0 +1,95 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
+import java.util.*;
+
+public class Main {
+
+	Map<Character, Boolean> aeiou = new HashMap<>();
+
+	//서로 다른 알파벳 개수 . 총 길이
+	int L;
+
+	//문자의 종류
+	int C;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+	String[] word;
+	boolean[] visit;
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		L = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+
+		word = new String[C];
+		visit = new boolean[C];
+
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < C; i++) {
+			word[i] = st.nextToken();
+		}
+
+		Arrays.sort(word);
+
+
+
+		aeiou.put('a',true);
+		aeiou.put('e',true);
+		aeiou.put('i',true);
+		aeiou.put('o',true);
+		aeiou.put('u',true);
+
+		//문자열, idx
+		dfs("",0);
+
+	}
+
+	public void dfs(String str, int idx) {
+
+		if(str.length() == L) {
+			//모음이면
+			int count =0;
+			for(int i=0; i<str.length(); i++) {
+				//모음이면
+				if(aeiou.get(str.charAt(i)) != null) {
+					count++;
+				}
+			}
+
+			if(str.length() - count >=2 && count >=1) {
+				System.out.println(str);
+			}
+			return;
+		}
+
+		//i 바꿔야해
+		for(int i=idx; i<C; i++) {
+			visit[i] = true;
+			if(str.length() == 0 || (int)str.charAt(str.length()-1) < word[i].charAt(0)) {
+				dfs(str + word[i],idx+1);
+			}
+			visit[i] = false;
+		}
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
