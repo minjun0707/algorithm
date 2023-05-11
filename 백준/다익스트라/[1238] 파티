@@ -1,27 +1,21 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
-
-import org.w3c.dom.Node;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class Main {
+
+	List<List<Node>> graph = new ArrayList<>();
+	int dist[];
 
 	int N;
 	int M;
 	int X;
 
-	int[] dist;
-
-	//최대 간선 + 최대 소비
-	int INF = 10000 * 100;
-
-	int answer = 0;
-	List<List<Node>> graph = new ArrayList();
+	int answer = -1;
 
 	public static void main(String[] args) throws IOException {
 		new Main().solution();
@@ -29,39 +23,43 @@ public class Main {
 
 	public void solution() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		//첫번째 입력 3개
+		st = new StringTokenizer(br.readLine());
 
-		//정점
+		//N명의 학생
 		N = Integer.parseInt(st.nextToken());
 
-		//간선
+		//M개의 간선
 		M = Integer.parseInt(st.nextToken());
+
+		// X번 마을에 모이자!
 		X = Integer.parseInt(st.nextToken());
 
-		//초기화
-		dist = new int[N + 1];
-		for (int i = 0; i < N + 1; i++) {
-			graph.add(new ArrayList<Node>());
+		//그래프 초기화
+
+		for (int i = 0; i <= N; i++) {
+			graph.add(new ArrayList<>());
 		}
 
-		//간선 추가
+		//간선 정보 입력
 		for (int i = 0; i < M; i++) {
+			//한줄 입력
 			st = new StringTokenizer(br.readLine());
+
 			int start = Integer.parseInt(st.nextToken());
 			int end = Integer.parseInt(st.nextToken());
 			int cost = Integer.parseInt(st.nextToken());
 
+			//단반향
 			graph.get(start).add(new Node(end, cost));
+
 		}
 
-		// 다익스트라
-		// 사람의 개수 만큼
+		//다익스트라를 사람의 횟수만큼. 시작지점에는 사람이 산다.
 		for (int i = 1; i <= N; i++) {
-			//사람이 사는 마을의 시작점, 끝나는점
-			int distance = dijkstra(i, X) + dijkstra(X, i);
-			answer = Math.max(distance, answer);
+			answer = Math.max(dijkstra(i, X) + dijkstra(X, i), answer);
 		}
 
 		System.out.println(answer);
@@ -69,17 +67,19 @@ public class Main {
 
 	public int dijkstra(int start, int end) {
 
-		Arrays.fill(dist, INF);
+		dist = new int[N + 1];
+		Arrays.fill(dist,1000*10000*100);
+		dist[start] = 0;
 
-		PriorityQueue<Node> que = new PriorityQueue<>((a, b) -> {
-			if (a.cost > b.cost) {
+		PriorityQueue<Node> que = new PriorityQueue<>((s1, s2) -> {
+			if (s1.cost > s2.cost) {
 				return 1;
-			} else {
+			} else if (s1.cost < s2.cost) {
 				return -1;
+			} else {
+				return 0;
 			}
 		});
-
-		dist[start] = 0;
 
 		que.offer(new Node(start, 0));
 
@@ -91,13 +91,15 @@ public class Main {
 			}
 
 			for (int i = 0; i < graph.get(node.idx).size(); i++) {
+
 				Node nextNode = graph.get(node.idx).get(i);
+
 				if (dist[nextNode.idx] > node.cost + nextNode.cost) {
 					dist[nextNode.idx] = node.cost + nextNode.cost;
 					que.offer(new Node(nextNode.idx, dist[nextNode.idx]));
 				}
-
 			}
+
 		}
 
 		return dist[end];
@@ -108,13 +110,15 @@ public class Main {
 		int idx;
 		int cost;
 
-		public Node(int idx, int cost) {
+		Node(int idx, int cost) {
 			this.idx = idx;
 			this.cost = cost;
 		}
 	}
 
 }
+
+
 
 
 
