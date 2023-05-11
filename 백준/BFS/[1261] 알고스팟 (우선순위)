@@ -1,0 +1,122 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
+import java.util.*;
+
+public class Main {
+
+	int N;
+	int M;
+	int map[][];
+	boolean visit[][];
+
+	int[] dirR = {1,0,-1,0};
+	int[] dirC = {0,1,0,-1};
+
+	int answer= 0 ;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		map = new int[M][N];
+		visit = new boolean[M][N];
+
+		for (int i = 0; i < M; i++) {
+			String str = br.readLine();
+			for (int j = 0; j < N; j++) {
+				int cell = str.charAt(j) - '0';
+				map[i][j] = cell;
+			}
+		}
+
+		bfs();
+
+		System.out.println(answer);
+	}
+
+	public void bfs() {
+		PriorityQueue<Node> que = new PriorityQueue<>((s1,s2)-> {
+			if(s1.wall > s2.wall) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+		que.offer(new Node(0, 0, 0));
+
+		while (!que.isEmpty()) {
+			Node node = que.poll();
+
+			if(node.r == M-1 && node.c == N-1) {
+				answer = node.wall;
+				break;
+			}
+
+			for(int i=0; i<4; i++) {
+				int nextR = node.r + dirR[i];
+				int nextC = node.c + dirC[i];
+
+				if(!rangeCheck(nextR,nextC)) {
+					continue;
+				}
+
+				if(visit[nextR][nextC]) {
+					continue;
+				}
+
+				if(map[nextR][nextC] == 1) {
+					que.offer(new Node(nextR,nextC,node.wall+1));
+				} else {
+					que.offer(new Node(nextR,nextC, node.wall));
+				}
+
+				visit[nextR][nextC] = true;
+
+			}
+
+
+		}
+
+
+
+	}
+
+	public boolean rangeCheck(int r, int c) {
+		return r>=0 && r<M && c>=0 && c < N ;
+	}
+
+	class Node {
+		int r;
+		int c;
+		int wall;
+
+		Node(int r, int c, int wall) {
+			this.r = r;
+			this.c = c;
+			this.wall = wall;
+		}
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
