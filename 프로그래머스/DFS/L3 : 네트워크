@@ -1,0 +1,65 @@
+import java.util.*;
+class Solution {
+    
+     List<List<Integer>> graph = new ArrayList<>();
+    boolean[] visit;
+    
+    public int solution(int n, int[][] computers) {
+        
+        visit = new boolean[n];
+        
+        for(int i=0; i<n; i++) {
+            graph.add(new ArrayList<>());
+        }
+        
+        for(int i=0 ; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                 if(computers[i][j] == 1) {
+                     graph.get(i).add(j);
+                }
+            }
+        }
+        
+        int answer= 0 ;
+        for(int i =0; i < n; i++) {
+            
+            if(visit[i]) {
+                continue;
+            }
+            
+            bfs(i);
+            answer++;
+        }
+        
+        return answer;
+    }
+    
+    public void bfs(int node) {
+        Queue<Integer> que = new LinkedList<>();
+        
+        que.offer(node);
+        visit[node] = true;
+        
+        while(!que.isEmpty()) {
+            int nowNode = que.poll();
+            
+            //리스트에는 연결된 정점의 번호가 저장되어있다.
+            //노드와 연결된 다른 노드가 저장된 리스트
+            List<Integer> list = graph.get(nowNode);
+            
+            for(int i=0; i < list.size(); i++) {
+               
+                if(visit[list.get(i)]) {
+                    continue;
+                }
+                
+                que.offer(list.get(i));
+                visit[list.get(i)] = true;
+            }
+        }
+        
+     
+    }
+    
+    
+}
