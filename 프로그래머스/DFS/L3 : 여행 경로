@@ -1,0 +1,57 @@
+/**
+ * 경로를 저장할때  String + " " 으로 저장이 가능하다!
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+import java.util.*;
+class Solution {
+    
+
+    boolean visit[];
+    List<String> list = new ArrayList<>();
+    
+    public String[] solution(String[][] tickets) {
+        visit = new boolean[tickets.length];
+        
+        dfs("ICN","ICN",tickets,0);
+        Collections.sort(list);
+        
+        String[] answer= new String[tickets.length+1];
+        return list.get(0).split(" ");
+    }
+    
+    //count : 여행횟수
+    public void dfs(String route,String start ,String[][] tickets,int count) {
+       
+        //탈출
+        if(count == tickets.length) {
+            list.add(route);
+            return;
+        }
+        
+        //반복
+        for(int i=0; i<tickets.length; i++) {
+            if(visit[i]) {
+                continue;
+            }
+            
+            //start가 일치하는 경우
+            //여행을 떠난다.
+            if(start.equals(tickets[i][0])) {
+                visit[i] = true;
+                dfs(route + " " + tickets[i][1],tickets[i][1],tickets,count+1);
+                visit[i] = false;
+            }
+        }
+        
+    }
+        
+        
+    
+}
