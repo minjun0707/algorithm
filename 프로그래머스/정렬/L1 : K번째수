@@ -1,0 +1,34 @@
+import java.util.*;
+class Solution {
+    public int[] solution(int[] array, int[][] commands) {
+        
+        //정답을 담을 배열
+        int answer[] = new int[commands.length];
+        
+        
+        //command의 개수 만큼 반복
+        for(int i=0; i< commands.length; i++) {
+            //인덱스 기준이므로 -1
+            int start = commands[i][0] -1;
+            int end = commands[i][1] -1;
+            int k = commands[i][2];
+            
+            //정렬될 수들을 담는 배열
+            int[] arr = new int[end-start+1];  
+            
+            int idx = 0;
+            for(int j=start; j <= end ; j++) {
+                arr[idx] = array[j];
+                idx++;
+            }
+            
+            //arr를 정렬
+            Arrays.sort(arr);
+            
+            answer[i] = arr[k-1];
+        }
+        
+        return answer;
+        
+    }
+}
