@@ -1,0 +1,28 @@
+class Solution {
+    int hIndex =0;
+    public int solution(int[] citations) {
+        int n = citations.length;
+        
+        for(int i=1; i<= 10000; i++) {
+            //h번 이상 인용
+            int h =i;
+            
+            int num =0;
+            for(int j=0; j<citations.length; j++) {
+                
+                //해당 논문이 h번 이상 인용이 되었으면
+                if(citations[j] >= h) {
+                    // h번 이상 인용된 논문의 수
+                    num++;
+                }
+            }
+            
+            // 논문의 수가 h만큼 인용이 되었으면
+            if(num >= h) {
+                hIndex = Math.max(hIndex,h);
+            }
+        }
+        
+        return hIndex;
+    }
+}
