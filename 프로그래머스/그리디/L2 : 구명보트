@@ -1,0 +1,32 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int[] people, int limit) {
+        
+        int count = 0;
+        int[] peopleReverse = new int[people.length];
+            
+        Arrays.sort(people);
+        
+        int minIdx = 0;
+        int maxIdx = people.length-1;
+        
+        while(minIdx <= maxIdx) {
+            if(people[minIdx] + people[maxIdx] <= limit) {
+                count++;
+                minIdx++;
+                maxIdx--;
+            } else if(minIdx == maxIdx) {
+                count++;
+                break;
+            } 
+            else {
+                count++;
+                maxIdx--;
+            }
+        }
+        
+        
+        return count;
+    }
+}
