@@ -1,0 +1,161 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
+import java.util.*;
+
+public class Main {
+
+	int[] dirR = {-1, -1, -1, 0, 0, 1, 1, 1};
+	int[] dirC = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//첫번째 줄 입력
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken());
+
+		//N*N 크기의 맵 생성
+		int foodMap[][] = new int[N][N];
+		int addFoodAmount[][] = new int[N][N];
+
+		//맵에 양분 입력
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < N; j++) {
+				int food = Integer.parseInt(st.nextToken());
+				addFoodAmount[i][j] = food;
+				foodMap[i][j] = 5;
+			}
+		}
+
+		List<Tree> allTreeList = new ArrayList<>();
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			int r = Integer.parseInt(st.nextToken()) - 1;
+			int c = Integer.parseInt(st.nextToken()) - 1;
+			int age = Integer.parseInt(st.nextToken());
+			Tree tree = new Tree(r, c, age);
+
+			allTreeList.add(tree);
+		}
+
+
+		//K년 만큼 반복
+		for (int i = 0; i < K; i++) {
+
+			Collections.sort(allTreeList, (s1, s2) -> {
+				if (s1.age > s2.age) {
+					return 1;
+				} else if (s1.age < s2.age) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+
+			List<Tree> liveTreeList = new ArrayList<>();
+			List<Tree> deadTreeList = new ArrayList<>();
+
+			//봄
+			//나무가 존재하면
+			for (int j = 0; j < allTreeList.size(); j++) {
+
+				Tree nowTree = allTreeList.get(j);
+
+				//양분을 먹을수 있으면 먹는다.
+				if (nowTree.age <= foodMap[nowTree.r][nowTree.c]) {
+					//양분을 자신의 나이만큼 먹는다.
+					foodMap[nowTree.r][nowTree.c] -= nowTree.age;
+					//나이가 증가한다.
+					nowTree.age++;
+
+					liveTreeList.add(nowTree);
+				}
+				//먹을수 없으면.
+				else {
+					//죽는다.
+					deadTreeList.add(nowTree);
+				}
+
+			}
+
+			//여름
+
+			for (int j = 0; j < deadTreeList.size(); j++) {
+
+				Tree nowTree = deadTreeList.get(j);
+				foodMap[nowTree.r][nowTree.c] += nowTree.age / 2;
+			}
+
+			//가을
+			for (int j = 0; j < liveTreeList.size(); j++) {
+				Tree nowTree = liveTreeList.get(j);
+				if (nowTree.age % 5 == 0) {
+					for (int t = 0; t < 8; t++) {
+						if (dirR[t] + nowTree.r >= 0 && dirC[t] + nowTree.c >= 0 &&
+							dirR[t] + nowTree.r < N && dirC[t] + nowTree.c < N) {
+							liveTreeList.add(new Tree(dirR[t] + nowTree.r, dirC[t] + nowTree.c, 1));
+						}
+					}
+				}
+			}
+
+			//겨울
+			for (int k = 0; k < N; k++) {
+				for (int t = 0; t < N; t++) {
+					foodMap[k][t] += addFoodAmount[k][t];
+				}
+			}
+
+			allTreeList = liveTreeList;
+
+		}
+
+		System.out.println(allTreeList.size());
+
+	}
+
+}
+
+//  5 2 2
+// 	2 3 2 3 2
+// 	2 3 2 3 2
+// 	2 3 2 3 2
+// 	2 3 2 3 2
+// 	2 3 2 3 2
+// 	2 1 3
+// 	3 2 3
+
+class Tree {
+	int r;
+	int c;
+	int age;
+
+	Tree(int r, int c, int age) {
+		this.r = r;
+		this.c = c;
+		this.age = age;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
