@@ -1,0 +1,63 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken());
+
+
+		int arr[] = new int[N];
+
+		//arr에 입력받기
+		for (int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(br.readLine());
+		}
+
+		int coin = K;
+		int count = 0;
+
+		for (int i = N - 1; i >= 0; i--) {
+
+			//코인보다 작으면
+			if (arr[i] <= coin) {
+				count = count + (coin / arr[i]);
+				coin = coin % arr[i];
+			}
+
+			if (coin == 0) {
+				break;
+			}
+
+		}
+		//
+
+		System.out.println(count);
+
+
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
