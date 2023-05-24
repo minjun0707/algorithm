@@ -1,0 +1,24 @@
+class Solution {
+    public int[] solution(String s) {
+        
+        int count = 0;
+        int removedZero = 0;
+        while(!s.equals("1")){
+            int preLen = s.length();
+            s = s.replace("0","");
+            
+            int nowLen = s.length();
+        
+            removedZero += preLen - nowLen;
+            
+            s = Integer.toString(s.length(),2);
+            
+            count++;
+        }
+        
+        int[] answer = new int[2];
+        answer[0] = count;
+        answer[1] = removedZero;
+        return answer;
+    }
+}
