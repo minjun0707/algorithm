@@ -1,0 +1,54 @@
+import java.util.*;
+
+class Solution {
+    boolean solution(String s) {
+        boolean answer = true;
+        
+        Stack<Character> stack = new Stack();
+        
+        int leftCount = 0;
+        int rightCount = 0;
+        
+        for(int i=0; i < s.length(); i++) {
+        
+                if(s.charAt(i) =='(') {
+                    leftCount++;
+                } else{
+                    rightCount++;
+                }
+            
+        }
+        
+          
+        if(leftCount != rightCount){
+            return false;
+        }
+      
+    
+    
+        
+        for(int i=0; i < s.length();i++) {
+            
+            char now = s.charAt(i);
+        
+            if(stack.empty() == false && stack.peek() =='(') {
+                if(now ==')'){
+                    stack.pop();
+                } else {
+                    stack.push(now);
+                }
+            } 
+            
+            else {
+                stack.push(now);
+            }
+            
+        }
+       
+        if(stack.empty()){
+            return true;
+        }
+        
+        return false;
+    }
+}
