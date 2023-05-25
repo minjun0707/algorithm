@@ -1,0 +1,60 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	String S;
+	String T;
+
+	boolean answer = false;
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		S = br.readLine();
+		T = br.readLine();
+
+		dfs(T);
+
+		if (answer) {
+			System.out.println(1);
+		} else {
+			System.out.println(0);
+		}
+	}
+
+	public void dfs(String nowStr) {
+		//A를 제거한다.
+		//B를 제거하고 문자열을 뒤집는다
+
+		if (nowStr.length() == S.length()) {
+			if (nowStr.equals(S)) {
+				answer = true;
+			}
+			return;
+		}
+
+		StringBuilder sb1 = new StringBuilder();
+		StringBuilder sb2 = new StringBuilder();
+		sb1.append(nowStr);
+		sb2.append(nowStr);
+
+		if (sb1.charAt(sb1.length() - 1) == 'A') {
+			dfs(sb1.deleteCharAt(sb1.length() - 1).toString());
+		}
+
+		if (sb2.charAt(0) == 'B') {
+			dfs(sb2.deleteCharAt(0).reverse().toString());
+		}
+
+
+	}
+}
