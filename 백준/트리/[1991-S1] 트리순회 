@@ -1,0 +1,114 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public static void insertNode(Node node, String data, String leftData, String rightData) {
+
+		//이닛
+		if (node.data.equals("")) {
+			node.data = data;
+			if (!leftData.equals(".")) {
+				node.leftNode = new Node(leftData, null, null);
+			}
+
+			if (!rightData.equals(".")) {
+				node.rightNode = new Node(rightData, null, null);
+			}
+
+			return;
+		}
+
+		//탐색
+
+		if (node.data.equals(data)) {
+
+			if (!leftData.equals(".")) {
+				node.leftNode = new Node(leftData, null, null);
+			}
+			if (!rightData.equals(".")) {
+				node.rightNode = new Node(rightData, null, null);
+			}
+		} else {
+			if (node.leftNode != null)
+				insertNode(node.leftNode, data, leftData, rightData);
+			if (node.rightNode != null)
+				insertNode(node.rightNode, data, leftData, rightData);
+		}
+
+	}
+
+	public static void preOrder(Node node) {
+		if (node == null)
+			return;
+
+		System.out.print(node.data);
+		preOrder(node.leftNode);
+		preOrder(node.rightNode);
+	}
+
+	public static void inOrder(Node node) {
+		if (node == null)
+			return;
+			inOrder(node.leftNode);
+			System.out.print(node.data);
+			inOrder(node.rightNode);
+
+	}
+
+	public static void postOrder(Node node) {
+		if (node == null)
+			return;
+			postOrder(node.leftNode);
+			postOrder(node.rightNode);
+			System.out.print(node.data);
+
+	}
+
+	public void solution() throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		//노드의 개수
+		int N = Integer.parseInt(br.readLine());
+
+		Node head = new Node("", null, null);
+
+		for (int i = 0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+
+			String data = st.nextToken();
+			String leftData = st.nextToken();
+			String rightData = st.nextToken();
+
+			insertNode(head, data, leftData, rightData);
+
+		}
+
+		preOrder(head);
+		System.out.println();
+		inOrder(head);
+		System.out.println();
+		postOrder(head);
+
+	}
+
+	static class Node {
+		String data;
+		Node leftNode;
+		Node rightNode;
+
+		Node(String data, Node leftNode, Node rightNode) {
+			this.data = data;
+			this.leftNode = leftNode;
+			this.rightNode = rightNode;
+		}
+	}
+}
