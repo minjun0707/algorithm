@@ -1,0 +1,89 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	List<List<Integer>> list;
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		//정점의 개수
+		int N = Integer.parseInt(br.readLine());
+
+		//정점과 간선의 정보를 담는 2차원 배열
+		//a,b -> a정점과 b 정점이 연결
+		int[][] info = new int[N][2];
+
+		//info에 정보를 담기
+		for(int i=0; i < N-1 ;i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			info[i][0] = Integer.parseInt(st.nextToken());
+			info[i][1] = Integer.parseInt(st.nextToken());
+		}
+
+		//리스트 초기화
+		list = new ArrayList<>();
+
+		for(int i=0; i<=N ; i++) {
+			list.add(new ArrayList<>());
+		}
+
+		//트리 생성
+		for(int i=0; i< N; i++) {
+			list.get(info[i][0]).add(info[i][1]);
+			list.get(info[i][1]).add(info[i][0]);
+		}
+
+		//질의 개수
+		int q = Integer.parseInt(br.readLine());
+
+		for(int i=0; i< q; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			//단절점
+			if(Integer.parseInt(st.nextToken()) == 1) {
+				int edge = Integer.parseInt(st.nextToken());
+
+				//연결된 간선이 하나인 경우 단절점이 아니다
+				if(list.get(edge).size() == 1) {
+					System.out.println("no");
+				}
+
+				//연결된 간선이 두개인 경우는 단절점이다
+				else {
+					System.out.println("yes");
+				}
+			}
+
+			//단절선
+			else {
+				System.out.println("yes");
+			}
+		}
+
+
+	}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
