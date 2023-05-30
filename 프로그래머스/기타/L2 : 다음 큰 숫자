@@ -1,0 +1,50 @@
+import java.util.*;
+class Solution {
+    public int solution(int n) {
+        
+        int maxN = 1000000;
+        //1, n이 주어진다
+        //2. n을 2진수로 변경한다.
+        //3. 2진수로 변경된 n의 1의 개수를 구한다
+        //4. 반복문을 통해  n보다 큰 수들의 1의 개수를 구한다
+        //5. 1의 개수가 동일하면 return !
+        
+        //2.
+        String s = Integer.toBinaryString(n);
+        // System.out.println("2진수 변환 " + s);
+        
+        //3.
+        int oneCount = 0;;
+        for(int i=0; i < s.length(); i++) {
+            if(s.charAt(i) == '1') {
+                oneCount++;
+            }
+        }
+        
+//         System.out.println("1의 개수" + oneCount);
+        
+        int answer = 0;
+        //4.
+        for(int i=n+1; i<= maxN; i++) {
+          
+            String str = Integer.toBinaryString(i);
+            int count = 0;
+            for(int j=0; j< str.length(); j++) {
+                if(str.charAt(j) == '1') {
+                    count++;
+                }
+             }
+            
+            if(oneCount == count) {
+                answer = i;
+                // System.out.println("answer " + i);
+                break;
+            }
+        }
+        
+
+        
+      
+        return  answer;
+    }
+}
