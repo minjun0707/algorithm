@@ -1,0 +1,43 @@
+import java.util.*;
+
+class Solution {
+    public int[] solution(int n, String[] words) {
+        
+        //set?
+        List<String> list = new ArrayList<>();
+        
+        //값이 없으면 반환값 null
+        //값이 있으면 반환값 존재
+        
+        list.add(words[0]);
+        
+        for(int i=1; i<words.length; i++) {
+            
+            String addStr = words[i];
+            System.out.println(addStr);
+            
+            //단어가 이전에 나왔다면 끝말잇기를 끝낸다.
+            if(list.contains(addStr)) {
+                int personNum = i % n +1;
+                int count = i /n +1;
+                int arr[] ={personNum,count};
+                return arr;
+            }
+                
+            //끝말잇기가 성립하지 않으면 끝낸다
+            String beforeStr = list.get(i-1);
+            if(beforeStr.charAt(beforeStr.length()-1) != words[i].charAt(0)) {
+                int personNum = i % n +1;
+                int count = i /n +1;
+                int arr[] ={personNum,count};
+                return arr;
+            }
+            
+            list.add(addStr);
+        }
+        
+        
+        int[] answer = {0,0};
+        return answer;
+    }
+}
