@@ -1,0 +1,80 @@
+import java.util.*;
+
+class Solution {
+    
+    int answer = 0;
+    public int solution(String s) {
+        //괄호 문자를 저장하는 덱
+        Queue<Character> que = new LinkedList();
+        
+       
+        
+        for(int i=0; i < s.length(); i++) {
+            que.add(s.charAt(i));
+        }
+        
+        for(int i=0; i<s.length()-1; i++) {
+            
+            if(i != 0) {
+                que.offer(que.poll());
+            }
+            
+            //올바른 괄호 문자열을 확인하기 위한 스택
+            Stack<Character> stack = new Stack();
+            
+            boolean flag = true;
+            for(char c : que) {
+                //처음 삽입
+
+                if(stack.isEmpty()) {
+                    stack.push(c);
+                } 
+                else {
+                    if(stack.peek()=='{') {
+                        if(c == '}') {
+                            stack.pop();
+                        } else {
+                            stack.push(c);
+                        }
+                    }
+                    
+                    else if(stack.peek()=='(') {
+                        if(c == ')') {
+                            stack.pop();
+                        } else {
+                            stack.push(c);
+                        }
+                    }
+                    
+                    else if(stack.peek()=='[') {
+                        if(c == ']') {
+                            stack.pop();
+                        } else {
+                            stack.push(c);
+                        }
+                    }
+                }
+                
+            } 
+            
+            if(stack.isEmpty()) {
+                answer++;
+            }
+            
+            
+            
+            // for(char c : que) {
+            //     System.out.print(c);
+            // } 
+            // System.out.println();
+            
+        }
+        
+        
+        
+        return answer;
+    }
+}
+
+//str이 6이면 다섯번 회전
+//짝수가 아니면 0
