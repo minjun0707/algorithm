@@ -1,0 +1,55 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int[] priorities, int location) {
+        
+        List<Process> list = new ArrayList<>();
+        List<Integer> rankList = new ArrayList<>();
+        for(int i=0; i < priorities.length; i++) {
+            rankList.add(priorities[i]);
+            list.add(new Process(i,priorities[i]));
+        }
+        
+        Collections.sort(rankList,Collections.reverseOrder());
+        
+        Queue<Process> que = new LinkedList();
+        for(Process p : list) {
+            que.offer(p);
+        }
+        
+        int count = 0;
+        while(true) {
+            Process now = que.poll();
+            
+            //우선순위가 더 높은 프로세스가 존재한다.
+            if(rankList.get(0) != now.rank) {
+                que.offer(now);
+            } 
+            //우선순위가 가장 높으면
+            else if(rankList.get(0) == now.rank){
+                count++;
+                rankList.remove(0);
+                
+                if(location == now.idx) {
+                    break;
+                }
+            }
+        }
+        
+        return count;
+        
+        
+    }
+    
+    class Process {
+        int idx;
+        int rank;
+        
+        public Process(int idx, int rank) {
+            this.idx = idx;
+            this.rank = rank;
+        }
+    }
+    
+   
+}
