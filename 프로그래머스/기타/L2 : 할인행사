@@ -1,0 +1,62 @@
+import java.util.*;
+
+class Solution {
+    public int solution(String[] want, int[] number, String[] discount) {
+        
+        List<DayInfo> dayList = new ArrayList<>();
+        
+        //i는 시작위치 , 
+        for(int i=0; i<= discount.length-10; i++) {
+
+            int arr[] = new int[want.length];
+            //want 반복
+            
+            for(int j=0; j < want.length; j++) {
+                
+                //날마다 과일의 개수를 담는 배열
+                
+                for(int k=0; k < 10 ; k++) {
+                    if(want[j].equals(discount[k+i])) {
+                        arr[j]++;
+                    }
+                }
+                
+            }
+           
+            dayList.add(new DayInfo(i,arr));
+        }
+        
+        
+        int answer =0;
+        for(int i=0; i<dayList.size(); i++) {
+            DayInfo dayInfo = dayList.get(i);
+            int arr[] = dayInfo.number;
+            boolean flag = true;
+                
+            for(int j=0; j<arr.length; j++) {
+                if(number[j] > arr[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            
+            if(flag) {
+                answer++;
+            }
+            
+        }
+            
+        
+        return answer;
+    }
+    
+    class DayInfo {
+        int day;
+        int[] number;
+        
+        public DayInfo(int day, int[] number) {
+            this.day = day;
+            this.number =number;
+        }
+    }
+}
