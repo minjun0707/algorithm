@@ -1,0 +1,119 @@
+class Solution {
+    int r = 5;
+    int c = 5;
+    
+    public int solution(String dirs) {
+        
+        //5,5 가 시작지점
+        Cell map[][] = new Cell[11][11];
+        for(int i = 0 ; i < 11; i++) {
+            for(int j=0; j< 11; j++) {
+                map[i][j] = new Cell();
+            }
+        }
+        
+        int count = 0;
+        
+        for(int i=0; i < dirs.length(); i++) {
+            
+            if(dirs.charAt(i) == 'U') {
+                if(rangeCheck(r+1,c) == false) {
+                    continue;
+                }
+            } 
+            if(dirs.charAt(i) == 'D') {
+                 if(rangeCheck(r-1,c) == false) {
+                    continue;
+                }
+                
+            } 
+            if(dirs.charAt(i) == 'L') {
+                 if(rangeCheck(r,c-1) == false) {
+                    continue;
+                }
+                
+            } 
+            if(dirs.charAt(i) == 'R') {
+                 if(rangeCheck(r,c+1) == false) {
+                    continue;
+                }
+                
+            } 
+            
+
+            
+            if(dirs.charAt(i) == 'U') {
+                
+                if(map[r+1][c].bottom == false && map[r][c].top == false) {
+                    
+                    count++;
+                }
+
+                //두 Cell 사이의 거리 연결
+                map[r][c].top = true;
+                map[r+1][c].bottom = true; 
+                
+                r = r +1;
+            }
+            if(dirs.charAt(i) == 'D') {
+                
+                if(map[r-1][c].top == false && map[r][c].bottom == false) {
+                    
+                    count++;
+                }
+                
+                map[r][c].bottom = true;
+                map[r-1][c].top = true; 
+                
+                r = r-1;
+                
+            } 
+            if(dirs.charAt(i) == 'L') {
+                
+                
+                if(map[r][c-1].right == false && map[r][c].left == false) {
+                    
+                    count++;
+                }
+                
+                map[r][c].left = true;
+                map[r][c-1].right = true; 
+                
+                c = c -1;
+            }
+            if(dirs.charAt(i) == 'R') {
+                
+                if(map[r][c+1].left == false && map[r][c].right == false) {
+                    
+                    count++;
+                }
+                
+                map[r][c].right = true;
+                map[r][c+1].left = true; 
+                
+                c = c + 1;   
+            }
+            
+            
+        }        
+        
+        
+        return count;
+    }
+    
+    public boolean rangeCheck(int nowR, int nowC) {
+        return nowR>= 0 && nowR < 11 && nowC >=0 && nowC < 11;
+    }
+    
+    class Cell {
+        //위쪽 방향 cell이 현재 cell 방문여부
+        boolean top = false;
+        boolean bottom = false;
+        boolean left = false;
+        boolean right = false;
+        
+        
+        
+    }
+    
+}
