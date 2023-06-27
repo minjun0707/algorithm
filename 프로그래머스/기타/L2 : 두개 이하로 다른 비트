@@ -1,0 +1,52 @@
+import java.util.*;
+
+class Solution {
+    public long[] solution(long[] numbers) {
+    
+        
+       long[] answer = new long[numbers.length];
+        
+         for(int i=0; i< numbers.length; i++) {
+             StringBuilder sb = new StringBuilder();
+             
+            //짝수인 경우
+            if(numbers[i] % 2 == 0) {
+                String s = Long.toBinaryString(numbers[i]);
+                sb.append(s);
+                sb.setCharAt(s.length()-1 ,'1');
+                answer[i] = Long.parseLong(sb.toString(),2);
+            } 
+             //최초의 01을 10 으로 변경
+            else {
+                String s = Long.toBinaryString(numbers[i]);
+                sb.append("0");
+                sb.append(s);
+                
+                char now ='2';
+                char before ='2';
+                for(int j = sb.length()-1; j >= 0; j--) {
+                    
+                    before = now;
+                    now = sb.charAt(j);
+                    
+                    if(now == '0' && before == '1') {
+                       
+                        sb.setCharAt(j,'1');
+                        sb.setCharAt(j+1,'0');
+                        break;
+                    }
+                }
+                
+                answer[i] = Long.parseLong(sb.toString(),2);
+            }
+        }
+        
+        return answer;
+        
+    }
+    
+    // 0011
+    //   now 1 before x
+    // no1 before 1;
+    // now before1
+}
