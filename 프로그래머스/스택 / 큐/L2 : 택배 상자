@@ -1,0 +1,48 @@
+import java.util.*;
+
+class Solution {
+    public int solution(int[] order) {
+        
+        Stack<Integer> stack = new Stack();
+        Stack<Integer> sub = new Stack();
+        
+        for(int i=order.length; i >= 1; i--) {
+           stack.push(i);
+        }
+        
+        int count = 0;
+        int i =0;
+        while(stack.size() > 0){
+            
+            while(stack.size() > 0) {
+                int target = stack.pop();
+                
+                //값이 같은 경우 
+                if(order[i] == target) {
+                    count ++;
+                    i++;
+                    break;
+                } 
+                //값이 다른 경우 벨트에 추가
+                else if(order[i] != target) {
+                    sub.push(target);
+                }
+            }
+            
+            while(sub.size() > 0) {
+                
+                if(sub.peek() == order[i]) {
+                    sub.pop();
+                    count++;
+                    i++;
+                } else {
+                    break;
+                }
+            }
+        }
+            
+
+        
+        return count;
+    }
+}
