@@ -1,0 +1,84 @@
+import java.util.*;
+
+class Solution {
+    
+    boolean visit[][]; 
+    int[] dirR = {-1,1,0,0};
+    int[] dirC = {0,0,1,-1};
+    int count = 0; 
+    int[][] map;
+    int mapR =0;
+    int mapC =0;
+    public int[] solution(String[] maps) {
+        
+        mapR = maps.length;
+        mapC = maps[0].length();
+        
+        visit = new boolean[maps.length][maps[0].length()];
+        map = new int[maps.length][maps[0].length()];
+        List<Integer> list = new ArrayList<Integer>();
+        
+        for(int i=0; i < maps.length;i++) {
+            for(int j=0; j < maps[0].length(); j++) {
+                if(maps[i].charAt(j) == 'X') {
+                    map[i][j] = 0;
+                    visit[i][j] = true;
+                } else {
+                    map[i][j] = maps[i].charAt(j)-'0';
+                }
+            }
+        }
+        
+        // for(int i=0; i < maps.length;i++) {
+        //     System.out.println();
+        //     for(int j=0; j < maps[0].length(); j++) {
+        //         System.out.print(map[i][j]);
+        //     }
+        // }
+
+        for(int i=0; i < maps.length;i++) {
+            for(int j=0; j < maps[0].length(); j++) {
+                if(map[i][j] != 0 && visit[i][j] == false){
+                    dfs(i,j);
+                    list.add(count);
+                }               
+                count = 0;
+            }
+        }
+        
+        Collections.sort(list);
+        
+        
+        int[] answer = new int[list.size()];
+        for(int i=0; i<list.size(); i++) {
+            answer[i] = list.get(i);
+        }
+
+        
+        if(list.size() == 0) {
+            int[] k = {-1};
+                return k;
+        }
+        
+        return answer;
+    }
+    
+    void dfs(int r, int c) {
+        count = count + map[r][c];
+        visit[r][c] = true;
+              
+        for(int i=0; i<4; i++) {
+            int nextR = r + dirR[i];
+            int nextC = c + dirC[i];
+            
+            if(rangeCheck(nextR,nextC) && visit[nextR][nextC] == false) {             
+                 dfs(nextR,nextC);                          
+            }
+        }
+        
+    }
+    
+    boolean rangeCheck(int r, int c) {
+        return r >= 0 && r < mapR && c >=0 && c < mapC;
+    }
+}
