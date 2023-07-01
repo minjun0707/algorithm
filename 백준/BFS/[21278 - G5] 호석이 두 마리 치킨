@@ -1,0 +1,153 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+	List<List<Integer>> list = new ArrayList();
+
+	int N;
+	int M;
+
+	int answer = Integer.MAX_VALUE;
+	int answerIdx1;
+	int answerIdx2;
+
+	boolean[] visit;
+
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//건물의 개수
+		N = Integer.parseInt(st.nextToken());
+
+		//도로의 개수
+		M = Integer.parseInt(st.nextToken());
+
+		visit = new boolean[N+1];
+
+		for (int i = 0; i <= N; i++) {
+			list.add(new ArrayList<>());
+		}
+
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			int start = Integer.parseInt(st.nextToken());
+			int end = Integer.parseInt(st.nextToken());
+
+			list.get(start).add(end);
+			list.get(end).add(start);
+		}
+
+		dfs(1,0);
+
+		System.out.println(answerIdx1 + " " + answerIdx2 + " " + answer);
+
+	}
+
+	public void bfs() {
+		Queue<Integer> que = new LinkedList<>();
+		boolean bfsVisit[] = new boolean[N+1];
+		int dist[] = new int[N+1];
+		Arrays.fill(dist,Integer.MAX_VALUE);
+
+		//선택된 두 도시를 que에 넣는다
+		for(int i=1; i <=N; i++) {
+			if(visit[i]) {
+				que.offer(i);
+				dist[i] = 0;
+				bfsVisit[i] = true;
+			}
+		}
+
+		while (!que.isEmpty()) {
+			//도시 선택
+			int node = que.poll();
+
+			for(int i=0; i < list.get(node).size(); i++) {
+				if(dist[list.get(node).get(i)] > dist[node] +1) {
+					dist[list.get(node).get(i)] = dist[node] +1;
+				}
+
+				if(bfsVisit[list.get(node).get(i)]) {
+					continue;
+				}
+
+				que.offer(list.get(node).get(i));
+				bfsVisit[list.get(node).get(i)] = true;
+			}
+		}
+
+		// for(int i : dist) {
+		// 	System.out.print(i +" ");
+		// }
+		//
+		// System.out.println();
+
+		int sum = 0;
+		for (int i = 1; i <= N; i++) {
+			sum += dist[i];
+		}
+
+		sum = sum * 2;
+
+		int temp = 1;
+		if(answer > sum) {
+			answer = sum;
+			for(int i=1; i<=N; i++) {
+				if(visit[i] && temp == 1) {
+					answerIdx1 = i;
+						temp ++;
+				}
+
+				if(visit[i] && temp == 2) {
+					answerIdx2 = i;
+				}
+			}
+		}
+
+
+	}
+	void dfs(int start, int cnt) {
+		if(cnt == 2) {
+			bfs();
+			return;
+		}
+
+		for(int i=start ;i <= N; i++) {
+			visit[i] = true;
+			dfs(i+1,cnt+1);
+			visit[i] = false;
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
