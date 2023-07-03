@@ -1,0 +1,109 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.StringTokenizer;
+
+import org.w3c.dom.Node;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	int N;
+	Egg[] eggs;
+
+	int maxCount = Integer.MIN_VALUE;
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		N = Integer.parseInt(br.readLine());
+		eggs = new Egg[N];
+
+		for(int i=0; i < N; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			Egg egg = new Egg(Integer.parseInt(st.nextToken()),Integer.parseInt(st.nextToken()));
+			eggs[i] = egg;
+		}
+
+		dfs(0);
+
+		System.out.println(maxCount);
+	}
+
+	void dfs(int pick) {
+		int count = calc();
+		maxCount = Math.max(maxCount,count);
+
+		//탈출 조건
+		if(pick == N) {
+			return;
+		}
+
+		//반복 조건
+		if(eggs[pick].durability > 0) {
+			for(int target=0; target < N; target++) {
+				if(eggs[target].durability > 0 && target != pick) {
+					eggs[pick].durability -= eggs[target].weight;
+					eggs[target].durability -= eggs[pick].weight;
+					dfs(pick+1);
+					eggs[pick].durability += eggs[target].weight;
+					eggs[target].durability += eggs[pick].weight;
+					//원상복구
+				}
+			}
+		} else {
+			dfs(pick+1);
+		}
+
+	}
+
+	int calc() {
+		int count = 0;
+		for(int i=0; i<N; i++) {
+
+			if(eggs[i].durability <= 0) {
+				count++;
+			}
+		}
+
+		return count;
+	}
+
+	class Egg {
+		int durability;
+		int weight;
+
+		Egg(int durability, int weight) {
+			this.durability = durability;
+			this.weight = weight;
+		}
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
