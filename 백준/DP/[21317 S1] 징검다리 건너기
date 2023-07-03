@@ -1,0 +1,98 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.StringTokenizer;
+
+import org.w3c.dom.Node;
+
+public class Main {
+
+	public static void main(String[] args) throws IOException {
+		new Main().solution();
+	}
+
+	public void solution() throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		int n = Integer.parseInt(br.readLine());
+
+		//idx를 0이 아닌 1로 한다.
+		int[] dp = new int[n + 1];
+		int[] tempDp = new int[n + 1];
+		int[][] jump = new int[2][n + 1];
+
+		for (int i = 1; i <= n - 1; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			jump[0][i] = Integer.parseInt(st.nextToken());
+			jump[1][i] = Integer.parseInt(st.nextToken());
+		}
+
+		int k = Integer.parseInt(br.readLine());
+
+		dp[1] = 0;
+
+		if(n != 1) {
+			dp[2] = dp[1] + jump[0][1];
+
+		}
+
+		for (int i = 3; i <= n; i++) {
+			//작은 점프
+			dp[i] = Math.min(dp[i - 1] + jump[0][i - 1], dp[i - 2] + jump[1][i - 2]);
+		}
+
+		for (int i = 0; i <= n; i++) {
+			tempDp[i] = dp[i];
+		}
+
+		int answer = dp[n];
+		for (int i = 4; i <= n; i++) {
+			//갱신이 가능하면 최대 차이인지 확인 후 삽입
+
+			tempDp[i] = tempDp[i - 3] + k;
+
+			for (int j = i + 1; j <= n; j++) {
+				//작은 점프
+				tempDp[j] = Math.min(tempDp[j - 1] + jump[0][j - 1], tempDp[j - 2] + jump[1][j - 2]);
+			}
+
+			answer = Math.min(tempDp[n], answer);
+
+			for (int j = 0; j <= n; j++) {
+				tempDp[i] = dp[i];
+			}
+		}
+
+		System.out.println(answer);
+
+		// for (int i : dp) {
+		// 	System.out.print(i + " ");
+		// }
+
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
