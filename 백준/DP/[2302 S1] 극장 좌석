@@ -1,0 +1,47 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int n = Integer.parseInt(br.readLine());
+        int m = Integer.parseInt(br.readLine());
+
+        int[] arr = new int[m];
+        int[] dp = new int[41];
+        for (int i = 0; i < m; i++) {
+            arr[i] = Integer.parseInt(br.readLine());
+        }
+
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
+        for (int i = 3; i < 41; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+
+        int sum = 1;
+
+        int start = 0;
+        for (int i = 0; i < m; i++) {
+            sum = sum * (dp[arr[i] - start - 1]);
+            start = arr[i];
+
+        }
+
+        // sum = sum * (dp[arr[0] - 1]);
+
+        // for (int i = 0; i < m - 1; i++) {
+        // sum = sum * (dp[arr[i + 1] - arr[i] - 1]);
+
+        // }
+
+        sum = sum * (dp[n - start]);
+        System.out.println(sum);
+
+    }
+
+}
