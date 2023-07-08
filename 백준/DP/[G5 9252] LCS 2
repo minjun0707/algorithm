@@ -1,0 +1,61 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+
+	static final long mod = 1000000000;
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		// 첫번째 문자열
+		String str = br.readLine();
+		char[] str1 = new char[str.length()];
+		for (int i = 0; i < str.length(); i++) {
+			str1[i] = str.charAt(i);
+		}
+
+		// 두번째 문자열
+		str = br.readLine();
+		char[] str2 = new char[str.length()];
+		for (int i = 0; i < str.length(); i++) {
+			str2[i] = str.charAt(i);
+		}
+
+		int dp[][] = new int[str2.length + 1][str1.length + 1];
+
+		for (int i = 1; i <= str2.length; i++) {
+			for (int j = 1; j <= str1.length; j++) {
+				if (str1[j - 1] == str2[i - 1]) {
+					dp[i][j] = dp[i - 1][j - 1] + 1;
+				} else {
+					dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+				}
+			}
+		}
+
+		int col = str1.length;
+		int row = str2.length;
+
+
+		String answer = "";
+		while(dp[row][col] != 0){
+			if(dp[row][col] == dp[row][col-1]) {
+				col--;
+			} else if(dp[row][col] == dp[row-1][col]){
+				row--;
+			} else {
+				answer = answer + str1[col-1];
+				row--;
+				col--;
+			}
+
+		}
+
+		StringBuilder sb = new StringBuilder(answer);
+		System.out.println(dp[str2.length][str1.length]);
+		System.out.println(sb.reverse());
+	}
+
+}
