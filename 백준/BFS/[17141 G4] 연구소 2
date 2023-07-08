@@ -1,0 +1,175 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import java.io.BufferedReader;
+import java.util.*;
+
+public class Main {
+
+	static int dirR[] = {0, 0, 1, -1};
+	static int dirC[] = {1, -1, 0, 0};
+	static int N;
+	static int M;
+
+
+	static int map[][];
+	static List<Cell> virusList = new ArrayList<>();
+	static boolean[] selectedVirus;
+
+	static int answer = Integer.MAX_VALUE;
+
+	// tip: arguments are passed via the field below this editor
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//연구소의 크기
+		N = Integer.parseInt(st.nextToken());
+
+		//바이러스의 개수
+		M = Integer.parseInt(st.nextToken());
+
+		map = new int[N][N];
+
+		for(int i=0; i<N; i++) {
+			st= new StringTokenizer(br.readLine());
+			for(int j=0; j<N; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+				if(map[i][j] == 1)
+					map[i][j] = -1;
+				if(map[i][j] == 2)
+					virusList.add(new Cell(i,j));
+			}
+		}
+
+		//선택된 바이러스 확인 유무 배열
+		selectedVirus = new boolean[virusList.size()];
+
+		//바이러스 선택
+		//bfs
+		//최소시간 구하기
+
+		dfs(0,0);
+
+		if(answer == Integer.MAX_VALUE) {
+			System.out.println(-1);
+		}
+		else {
+			System.out.println(answer);
+		}
+
+
+
+	}
+
+	static int bfs() {
+		int copyMap[][] = new int[N][N];
+		//카피 맵
+		for(int i=0; i<N; i++) {
+			for(int j=0; j<N; j++) {
+				copyMap[i][j] = map[i][j];
+			}
+		}
+
+		Queue<Cell> que = new LinkedList<>();
+
+		for(int i=0; i< virusList.size(); i++) {
+			if(selectedVirus[i]) {
+				que.offer(new Cell(virusList.get(i).r,virusList.get(i).c));
+				copyMap[virusList.get(i).r][virusList.get(i).c] = -1;
+			} else {
+				copyMap[virusList.get(i).r][virusList.get(i).c] = 0;
+			}
+		}
+
+
+
+
+		while(!que.isEmpty()) {
+			Cell now = que.poll();
+
+			for(int i=0; i<4; i++) {
+				int nextR = now.r + dirR[i];
+				int nextC = now.c + dirC[i];
+
+				if(rangeCheck(nextR,nextC) == false ) {
+					continue;
+				}
+
+				//빈 공간인 경우
+				if(copyMap[nextR][nextC] == 0) {
+					if(copyMap[now.r][now.c] == -1) {
+						copyMap[nextR][nextC] = 1;
+					} else {
+						copyMap[nextR][nextC] = copyMap[now.r][now.c] + 1;
+					}
+
+					que.offer(new Cell(nextR,nextC));
+				}
+
+
+			}
+
+		}
+
+		// for(int i=0; i< N ; i++) {
+		// 	System.out.println();
+		// 	for(int j=0; j<N; j++) {
+		// 		System.out.print(copyMap[i][j] + " ");
+		// 	}
+		// }
+		// System.out.println();
+
+		//시간 구학
+		int maxValue = 0;
+		int zeroCnt = 0;
+		for(int i=0; i<N; i++) {
+			for(int j=0; j<N; j++) {
+				maxValue = Math.max(copyMap[i][j],maxValue);
+
+				if(copyMap[i][j]==0) {
+					zeroCnt++;
+				}
+			}
+		}
+
+		if(zeroCnt != 0) {
+			return Integer.MAX_VALUE;
+		}
+
+
+
+		return maxValue;
+	}
+	static boolean rangeCheck(int r, int c) {
+		return r>=0 && r<N && c>=0 && c<N;
+	}
+
+	static void dfs(int start ,int virusCnt) {
+		if(M == virusCnt) {
+			int time = bfs();
+			answer = Math.min(answer,time);
+		}
+
+		for(int i=start; i<virusList.size(); i++) {
+			selectedVirus[i] = true;
+			dfs(i+1,virusCnt+1);
+			selectedVirus[i] = false;
+		}
+	}
+
+	static class Cell {
+		int r;
+		int c;
+		Cell (int r, int c) {
+			this.r = r;
+			this.c = c;
+		}
+	}
+}
+
+
+
+
