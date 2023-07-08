@@ -1,0 +1,199 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+
+	static final long mod = 1000000000;
+
+	static int[] dirR = {0,0,1,-1};
+	static int[] dirC = {1,-1,0,0};
+
+	static char map[][];
+
+	static int visit[][];
+
+	static  final int VISIT = 1;
+	static  final int REMOVE = 2;
+
+	static int answer = 0;
+	static int removedColorCount = 0;
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		List<String> list = new ArrayList<>();
+		map = new char[12][6];
+		visit = new int[12][6];
+
+
+
+		for (int i = 0; i < 12; i++) {
+			String str = br.readLine();
+			for (int j = 0; j < 6; j++) {
+				map[i][j] = str.charAt(j);
+			}
+		}
+
+		//1. bfs 뿌시기
+
+
+
+		while(true) {
+
+			for (int i = 0; i < 12; i++) {
+				for (int j = 0; j < 6; j++) {
+					if (map[i][j] == '.' || visit[i][j] >= VISIT)
+						continue;
+					bfs(i, j, map[i][j]);
+				}
+			}
+
+			if(removedColorCount == 0) {
+				System.out.println(answer);
+				return;
+			} else {
+				answer++;
+			}
+
+			removedColorCount = 0;
+
+
+
+			//지우기
+			for(int k=0; k<12; k++) {
+				for(int t=0; t<6 ;t++) {
+					if(visit[k][t] == REMOVE) {
+						map[k][t] = '.';
+					}
+				}
+			}
+
+
+
+
+			//초기화
+			visit = new int[12][6];
+
+			//옮기기
+			movePuyo();
+
+			// for(int k=0; k<12; k++) {
+			// 	System.out.println();
+			// 	for(int t=0; t<6 ;t++) {
+			// 		System.out.print(map[k][t]);
+			// 	}
+			// }
+
+
+
+			// System.out.println();
+
+
+
+
+
+		}
+
+
+
+	}
+
+	static void movePuyo() {
+		for(int i=0; i<6; i++) {
+			List<Character> list = new ArrayList();
+			for(int j=11; j>=0; j--) {
+				list.add(map[j][i]);
+			}
+
+			for(int j=11 ; j>=0; j--) {
+				if(list.get(j) == '.') {
+					list.remove(j);
+				}
+			}
+
+
+			for(int j=0; j<12; j++) {
+				map[j][i] = '.';
+			}
+
+			for(int j=0; j<list.size(); j++) {
+				map[11-j][i] = list.get(j);
+			}
+
+
+
+
+		}
+	}
+
+	static void bfs(int r, int c, char color) {
+
+		int count = 0;
+		Queue<Cell> que = new LinkedList();
+
+		que.offer(new Cell(r,c,color));
+
+		boolean visitTemp[][] = new boolean[12][6];
+		visitTemp[r][c] = true;
+		count++;
+
+
+		while(!que.isEmpty()) {
+			Cell cell = que.poll();
+
+			for(int i=0; i<4; i++) {
+				int nextR = cell.r + dirR[i];
+				int nextC = cell.c + dirC[i];
+
+				if(rangeCheck(nextR,nextC) == true) {
+					if (map[nextR][nextC] == color && visitTemp[nextR][nextC] == false) {
+						que.offer(new Cell(nextR, nextC, color));
+						visitTemp[nextR][nextC] = true;
+						count++;
+					}
+				}
+			}
+		}
+
+
+
+
+
+
+
+		//4개 보다 커 ?
+		if(count >=4) {
+			removedColorCount++;
+			for(int i=0; i<12; i++) {
+				for(int j=0; j<6 ;j++) {
+					if(visitTemp[i][j] == true) {
+						visit[i][j] = REMOVE;
+					}
+				}
+			}
+		}
+
+
+
+
+
+
+	}
+
+	static class Cell {
+		char color;
+		int r;
+		int c;
+
+		Cell(int r, int c, char color) {
+			this.color = color;
+			this.r = r;
+			this.c = c;
+		}
+	}
+
+	static boolean rangeCheck(int r, int c) {
+		return r>=0 && r<12 && c>=0 && c<6;
+	}
+}
