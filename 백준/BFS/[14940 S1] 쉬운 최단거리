@@ -1,0 +1,117 @@
+import java.util.*;
+import java.io.*;
+
+public class Main {
+
+    // 세로
+    static int n;
+    // 가로
+    static int m;
+
+    static int startR;
+    static int startC;
+
+    static int[][] map;
+
+    static int[] dirR = { 1, -1, 0, 0 };
+    static int[] dirC = { 0, 0, 1, -1 };
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        map = new int[n][m];
+
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+
+            for (int j = 0; j < m; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
+
+                if (map[i][j] == 0) {
+                    map[i][j] = -2;
+                } else if (map[i][j] == 1) {
+                    map[i][j] = 0;
+                } else {
+                    map[i][j] = 0;
+                    startR = i;
+                    startC = j;
+                }
+            }
+        }
+
+        bfs();
+
+    }
+
+    static void bfs() {
+
+        Queue<Cell> que = new LinkedList<>();
+        que.offer(new Cell(startR, startC));
+
+        while (!que.isEmpty()) {
+            Cell now = que.poll();
+
+            for (int i = 0; i < 4; i++) {
+                int nextR = now.r + dirR[i];
+                int nextC = now.c + dirC[i];
+
+                if (nextR == startR && nextC == startC) {
+                    continue;
+                }
+
+                if (rangeCheck(nextR, nextC) == false) {
+                    continue;
+                }
+
+                if (map[nextR][nextC] == 0) {
+                    map[nextR][nextC] = map[now.r][now.c] + 1;
+                    que.offer(new Cell(nextR, nextC));
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            
+            for (int j = 0; j < m; j++) {
+                int val = map[i][j];
+
+                if (val == 0) {
+                    val = -1;
+                }
+                if (val == -2) {
+                    val = 0;
+                }
+
+                if (i == startR && j == startC) {
+                    val = 0;
+                }
+
+                if (j == m - 1) {
+                    System.out.print(val);
+                } else {
+                    System.out.print(val + " ");
+                }
+            }
+
+            System.out.println();
+        }
+    }
+
+    static boolean rangeCheck(int r, int c) {
+        return r >= 0 && r < n && c >= 0 && c < m;
+    }
+
+    static class Cell {
+        int r;
+        int c;
+
+        Cell(int r, int c) {
+            this.r = r;
+            this.c = c;
+        }
+    }
+}
