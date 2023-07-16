@@ -1,0 +1,39 @@
+// tip: each public class is put in its own file
+
+import java.util.*;
+import java.io.*;
+
+public class Main {
+    // tip: arguments are passed via the field below this editor
+    static int keyword;
+    static int writing;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        keyword = Integer.parseInt(st.nextToken());
+        writing = Integer.parseInt(st.nextToken());
+
+        Map<String, Boolean> map = new HashMap<>();
+
+        for (int cnt = 0; cnt < keyword; cnt++) {
+            String str = br.readLine();
+            map.put(str, true);
+        }
+
+        for (int cnt = 0; cnt < writing; cnt++) {
+            String str[] = br.readLine().split(",");
+
+            for (int i = 0; i < str.length; i++) {
+                if (map.containsKey(str[i])) {
+                    map.remove(str[i]);
+                }
+            }
+
+            // map에 남아 있느 개수
+            System.out.println(map.size());
+
+        }
+
+    }
+}
