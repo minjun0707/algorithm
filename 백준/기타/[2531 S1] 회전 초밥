@@ -1,0 +1,115 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import java.sql.Array;
+import java.util.*;
+
+class Main {
+
+	static int N;
+	static int now = 0;
+	static int answer =0;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		//접시의 수
+		int N = Integer.parseInt(st.nextToken());
+		//초밥의 가지수
+		int d = Integer.parseInt(st.nextToken());
+		//연속해 먹는 접시의 수
+		int k = Integer.parseInt(st.nextToken());
+		//쿠폰 번호
+		int c = Integer.parseInt(st.nextToken());
+
+		//접시의 끝부분이 시작부분과 K-1의 길이만큼 연결되야 한다
+		int plate[] = new int[N + k - 1];
+
+		//초밥의 시작부터 끝까지 배열에 삽입
+		for (int i = 0; i < N; i++) {
+			plate[i] = Integer.parseInt(br.readLine());
+		}
+
+		//끝부분에서 부터 연속해서 나올 수 있는 접시의 길이만큼 배열에 삽입
+		for (int i = N; i < N + k - 1; i++) {
+			plate[i] = plate[i - N];
+		}
+
+		//초밥의 종류 - k만큼 연속해서 접시를 선택했을때 몇번 선택 되었는지에 대한 개수
+		Map<Integer, Integer> num = new HashMap<>();
+		for (int i = 1; i <= d; i++) {
+			num.put(i, 0);
+		}
+
+		for (int i = 0; i < k; i++) {
+			if (num.get(plate[i]) == 0) {
+				now++;
+			}
+
+			num.put(plate[i], num.getOrDefault(plate[i], 0) + 1);
+		}
+
+		// System.out.println(now);
+		answer = now;
+
+		int flag = 0;
+		for (int i = 1; i < N; i++) {
+
+			//지웠는데 0이되면
+			if (num.get(plate[i - 1]) == 1) {
+				now = now -1;
+			}
+			num.put(plate[i - 1], num.get(plate[i - 1]) - 1);
+
+			if (num.get(plate[i + k - 1]) == 0) {
+				now = now + 1;
+			}
+			num.put(plate[i + k - 1], num.get(plate[i + k - 1]) + 1);
+
+			// System.out.println("now : " + now);
+
+			if(answer < now) {
+				answer = now;
+				flag = i;
+			}
+
+			if(answer == now) {
+				int temp = 0;
+				for(int j=i; j<i+k; j++) {
+					if(num.get(plate[j]) == c) {
+						temp = 1;
+						break;
+					}
+				}
+
+				if(temp == 0) {
+					answer = now;
+					flag = i;
+				}
+			}
+		}
+
+		int cntFlag = 0;
+		for(int i=flag; i < flag +k ; i++) {
+			// System.out.print(plate[i] + " ");
+			if(plate[i] == c) {
+				cntFlag = 1;
+			}
+		}
+		// System.out.println();
+
+		if(cntFlag == 0) {
+			answer++;
+		}
+
+		System.out.println(answer);
+	}
+
+}
+
+
+
+
