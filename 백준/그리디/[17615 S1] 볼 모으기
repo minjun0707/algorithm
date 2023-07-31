@@ -1,0 +1,85 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+class Main {
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		String str = br.readLine();
+
+		int red = 0;
+		int blue = 0;
+
+		for (int i = 0; i < N; i++) {
+			if (str.charAt(i) == 'R') {
+				red++;
+			} else {
+				blue++;
+			}
+		}
+
+		int cnt = 0;
+		int seq = 0;
+
+		//빨강을 오른쪽 으로 옮긴다. 조건 : 맨 오른쪽이 파랑이다.
+		int idx = 0;
+		while (str.charAt(idx) == 'R') {
+			seq++;
+			idx++;
+
+			if (idx == str.length()) {
+				break;
+			}
+		}
+		cnt = red - seq;
+
+		seq = 0;
+		idx = 0;
+		while (str.charAt(idx) == 'B') {
+			seq++;
+			idx++;
+
+			if (idx == str.length()) {
+				break;
+			}
+		}
+		cnt = Math.min(blue - seq, cnt);
+
+		seq = 0;
+		//빨강을 오른쪽 으로 옮긴다. 조건 : 맨 오른쪽이 빨강이다.
+		idx = str.length() - 1;
+		while (str.charAt(idx) == 'R') {
+			seq++;
+			idx--;
+
+			if (idx == -1) {
+				break;
+			}
+			cnt = Math.min(red - seq, cnt);
+		}
+
+		seq = 0;
+		//파랑을 오른쪽 으로 옮긴다. 조건 : 맨 오른쪽이 파랑이다.
+		idx = str.length() - 1;
+		while (str.charAt(idx) == 'B') {
+			seq++;
+			idx--;
+
+			if (idx == -1) {
+				break;
+			}
+		}
+		cnt = Math.min(blue - seq, cnt);
+
+		System.out.println(cnt);
+
+	}
+
+}
+
+
+
+
