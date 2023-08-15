@@ -1,0 +1,86 @@
+import java.util.*;
+
+class Main {
+
+	static int N;
+	static int M;
+
+	//카운트 보다 크면 백트래킹 !!!
+	static int answer = Integer.MAX_VALUE;
+	static int answerUser = 0;
+
+	//초기화 생각!!!
+	static int visit[];
+	static List<List<Integer>> userRelation = new ArrayList<>();
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		// 유저의 수
+		N = sc.nextInt();
+
+		// 관계의 수
+		M = sc.nextInt();
+
+		//visit 초기화
+		visit = new int[N];
+
+		//list 초기화
+		for (int i = 0; i <= N; i++) {
+			userRelation.add(new ArrayList<Integer>());
+		}
+
+		//관계 입력 받기
+		for (int i = 0; i < M; i++) {
+			int start = sc.nextInt();
+			int end = sc.nextInt();
+
+			userRelation.get(start).add(end);
+			userRelation.get(end).add(start);
+		}
+
+		for (int i = 1; i <= N; i++) {
+			bfs(i);
+		}
+
+		System.out.println(answerUser);
+		//시작을 1로했으니까 나중에 1 빼끼!!!!!
+	}
+
+	static void bfs(int start) {
+		visit = new int[N + 1];
+		Queue<Integer> que = new LinkedList<Integer>();
+		que.add(start);
+		visit[start] = 0;
+		int count = 0;
+
+		while (!que.isEmpty()) {
+			int now = que.poll();
+
+			for (int i = 0; i < userRelation.get(now).size(); i++) {
+
+				if(userRelation.get(now).get(i) == start) {
+					continue;
+				}
+
+				//방문을 안했으면.
+				if (visit[userRelation.get(now).get(i)] == 0) {
+					que.offer(userRelation.get(now).get(i));
+					visit[userRelation.get(now).get(i)] = visit[now] + 1;
+					count = count + visit[now] + 1;
+				}
+
+			}
+
+		}
+
+
+
+
+	}
+
+}
+
+
+
+
