@@ -1,0 +1,169 @@
+import java.util.*;
+
+class Main {
+
+	static int R;
+	static int C;
+	static char[][] map;
+
+	static int[] dirX = {0,0,1,-1};
+	static int[] dirY = {1,-1,0,0};
+
+	static final int WATER = 1;
+	static final int ANIMAL = 2;
+
+	static Node D;
+	static Node S;
+	static Node W;
+	static int answer = 0;
+	static List<Node> list = new ArrayList<>();
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		R = sc.nextInt();
+		C = sc.nextInt();
+
+		map = new char[R][C];
+
+		 D = new Node();
+		 S = new Node();
+		 W = new Node();
+
+		for(int i=0; i<R; i++) {
+			String s = sc.next();
+			for(int j=0; j<C; j++) {
+				char val = s.charAt(j);
+				map[i][j] = val;
+
+				if(val == 'D') {
+					D.r = i;
+					D.c = j;
+				}
+				if(val == 'S') {
+					S.r = i;
+					S.c = j;
+					S.type = ANIMAL;
+				}
+				if(val == '*') {
+					list.add(new Node(i,j,WATER,0));
+				}
+
+			}
+		}
+
+		bfs();
+
+		if(map[D.r][D.c]=='S') {
+			System.out.println(answer);
+		} else {
+			System.out.println("KAKTUS");
+		}
+
+
+	}
+
+	static void bfs() {
+		Deque<Node> que = new ArrayDeque<>();
+
+
+		for(int i=0; i < list.size(); i++) {
+			que.offer(list.get(i));
+		}
+
+		que.offer(S);
+
+
+		while(!que.isEmpty() ) {
+
+			Node now = que.poll();
+
+			if(now.r == D.r && now.c == D.c && now.type == ANIMAL) {
+				answer = now.count;
+				break;
+			}
+
+			for(int i=0; i<4; i++) {
+				int nextR = now.r + dirX[i];
+				int nextC = now.c + dirY[i];
+
+				if(rangeCheck(nextR,nextC) == false) {
+					continue;
+				}
+
+				if(map[nextR][nextC] == 'X') {
+					continue;
+				}
+
+				// . 이랑 D만이동가능
+				if(now.type == WATER) {
+					if(map[nextR][nextC] == 'D') {
+						continue;
+					}
+
+					if(map[nextR][nextC] == '*') {
+						continue;
+					}
+
+					if(map[nextR][nextC] == 'S') {
+						continue;
+					}
+				}
+
+				//.이랑 S만이동가능
+				else if(now.type == ANIMAL) {
+					if(map[nextR][nextC] == '*') {
+						continue;
+					}
+					if(map[nextR][nextC] == 'S') {
+						continue;
+					}
+				}
+
+				que.offer(new Node(nextR,nextC,now.type,now.count+1));
+
+				if(now.type == WATER) {
+					map[nextR][nextC] = '*';
+				} else if(now.type == ANIMAL) {
+					map[nextR][nextC] = 'S';
+				}
+			}
+		}
+
+
+	}
+
+	static boolean rangeCheck(int r, int c) {
+		return r>=0 && r<R && c>=0 && c<C;
+	}
+
+
+	static class Node {
+		int r;
+		int c;
+
+		int type;
+		int count;
+
+		Node () {
+
+		}
+		Node (int r, int c, int type, int count) {
+			this.r = r;
+			this.c = c;
+			this.type = type;
+			this.count = count;
+		}
+
+
+	}
+
+
+
+
+
+}
+
+
+
+
