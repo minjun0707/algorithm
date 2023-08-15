@@ -1,0 +1,78 @@
+import java.util.*;
+
+class Main {
+
+	static int N;
+	static int M;
+	static int[][] dist;
+	static final int INF = 1000;
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		// 유저의 수
+		N = sc.nextInt();
+
+		// 관계의 수
+		M = sc.nextInt();
+
+		dist = new int[N+1][N+1];
+
+		//2차원 배열 초기화
+		//본인 자신은 초기화 하지 않는다.
+		for(int i=1; i<N+1; i++) {
+			for(int j=1; j<N+1; j++) {
+				if(i == j) {
+
+				} else {
+					dist[i][j] = INF;
+
+				}
+			}
+		}
+
+		for(int i=0; i< M; i++) {
+			int start = sc.nextInt();
+			int end = sc.nextInt();
+			dist[start][end] = 1;
+			dist[end][start] = 1;
+		}
+
+		floyd();
+		int answer = Integer.MAX_VALUE;
+		int user = 0;
+		for(int i=1; i<=N; i++) {
+			int val = 0;
+			for(int j=1; j<=N; j++) {
+				val += dist[i][j];
+			}
+
+			if(val < answer) {
+				answer = val;
+				user = i;
+			}
+		}
+
+		System.out.println(user);
+
+
+	}
+
+	static void floyd() {
+		for(int k =1; k<=N; k++ ){
+			for(int i=1; i<=N; i++) {
+				for(int j=1; j<=N; j++) {
+					if(dist[i][j] > dist[i][k] + dist[k][j]) {
+						dist[i][j] = dist[i][k] + dist[k][j];
+					}
+				}
+			}
+		}
+	}
+
+
+}
+
+
+
+
