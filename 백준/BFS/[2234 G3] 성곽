@@ -1,0 +1,130 @@
+import java.util.*;
+
+import com.sun.security.jgss.GSSUtil;
+
+class Main {
+
+	static int M;
+	static int N;
+	static int map[][][];
+	static int room[][];
+	static int dirC[] = {-1, 0, 1, 0};
+	static int dirR[] = {0, -1, 0, 1};
+	static int maxRoomSize = 0;
+	static int roomCount = 0;
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		//세로
+		N = sc.nextInt();
+
+		//가로
+		M = sc.nextInt();
+		// 서 1 북 2 동 4 남 8
+		map = new int[M][N][4];
+		room = new int[M][N];
+
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < N; j++) {
+				String s = Integer.toBinaryString(sc.nextInt());
+
+				for (int k = s.length() - 1; k >= 0; k--) {
+					if (s.charAt(k) == '1') {
+						map[i][j][s.length() - 1 - k] = 1;
+					}
+				}
+			}
+		}
+
+		// 방의 개수
+		for(int i=0; i<M; i++) {
+			for(int j=0; j<N; j++) {
+				if(room[i][j] == 0){
+					roomCount++;
+					maxRoomSize = Math.max(bfs(i,j),maxRoomSize);
+				}
+			}
+		}
+
+		int maxAnswer = 0;
+		for(int i=0; i<M; i++) {
+			for(int j=0; j<N; j++) {
+				for(int k=0; k<4; k++) {
+					if(map[i][j][k] == 1) {
+						room = new int[M][N];
+						map[i][j][k] = 0;
+						maxAnswer = Math.max(maxAnswer,bfs(i,j));
+						map[i][j][k] = 1;
+					}
+				}
+			}
+		}
+
+
+
+		System.out.println(roomCount);
+		System.out.println(maxRoomSize);
+		System.out.println(maxAnswer);
+
+
+	}
+
+
+
+	static int bfs(int r, int c) {
+		Queue<Node> que = new LinkedList<>();
+		que.offer(new Node(r, c, 1));
+		room[r][c] = 1;
+
+		int temp = 1;
+		while (!que.isEmpty()) {
+			Node now = que.poll();
+
+			for (int i = 0; i < 4; i++) {
+				int nextR = now.r + dirR[i];
+				int nextC = now.c + dirC[i];
+
+				if (rangeCheck(nextR, nextC) == false) {
+					continue;
+				}
+
+				if (room[nextR][nextC] != 0) {
+					continue;
+				}
+
+				if (map[now.r][now.c][i] == 1) {
+					continue;
+				}
+
+				que.offer(new Node(nextR, nextC, now.count + 1));
+				room[nextR][nextC] = 1;
+				temp++;
+
+			}
+		}
+
+		return temp;
+	}
+
+	static boolean rangeCheck(int r, int c) {
+		return r >= 0 && r < M && c >= 0 && c < N;
+	}
+
+	static class Node {
+		int r;
+		int c;
+		int count;
+
+		Node(int r, int c, int count) {
+			this.r = r;
+			this.c = c;
+			this.count = count;
+		}
+	}
+
+}
+
+
+
+
