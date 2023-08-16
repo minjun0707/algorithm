@@ -1,0 +1,49 @@
+import java.util.*;
+
+import com.sun.security.jgss.GSSUtil;
+
+class Main {
+
+	static int M;
+	static int N;
+	static boolean[] visit;
+
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		//자연수 N
+		N = sc.nextInt();
+
+		//자연수 M
+		M = sc.nextInt();
+
+		visit = new boolean[N+1];
+
+		dfs(0,"");
+	}
+
+	static void dfs(int count,String s) {
+
+		//탈출 조건
+		if(count == M){
+			System.out.println(s.trim());
+			return;
+		}
+
+		for(int i=1; i<=N ;i++) {
+
+			if(visit[i] == true) {
+				continue;
+			}
+
+			visit[i] = true;
+			dfs(count+1, s + i + " ");
+			visit[i] = false;
+		}
+	}
+}
+
+
+
+
