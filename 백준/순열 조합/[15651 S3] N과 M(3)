@@ -1,0 +1,51 @@
+import java.util.*;
+
+import com.sun.security.jgss.GSSUtil;
+
+class Main {
+
+	static int M;
+	static int N;
+	static boolean[] visit;
+	static int[] arr;
+	static StringBuilder sb = new StringBuilder();
+
+
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		//자연수 N
+		N = sc.nextInt();
+
+		//자연수 M
+		M = sc.nextInt();
+
+		arr = new int[N+1];
+
+		dfs(1,0);
+		System.out.println(sb.toString().trim());
+	}
+
+	static void dfs(int idx, int depth) {
+
+		//탈출 조건
+		if(depth == M){
+			for(int i=0; i<M;i++) {
+				sb.append(arr[i]);
+				sb.append(" ");
+			}
+			sb.append("\n");
+			return;
+		}
+
+		for(int i=idx; i<=N ;i++) {
+			arr[depth] = i;
+			dfs(i,depth+1);
+		}
+	}
+}
+
+
+
+
