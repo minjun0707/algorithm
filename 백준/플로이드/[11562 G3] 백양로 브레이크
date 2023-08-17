@@ -1,0 +1,74 @@
+import java.util.*;
+
+import com.sun.security.jgss.GSSUtil;
+
+class Main {
+
+	static int N;
+	static int M;
+	static int[][] map;
+	static int INF = 250*250;
+	static int oneWay = 0;
+	static int twoWay = 1;
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int N = sc.nextInt();
+		int M = sc.nextInt();
+
+		map = new int[N+1][N+1];
+		for(int i=1; i<=N; i++) {
+			for(int j=1; j<=N ; j++) {
+				if(i != j) {
+					map[i][j] = INF;
+				}
+			}
+		}
+
+		for(int i=0; i<M; i++) {
+			int start = sc.nextInt();
+			int end = sc.nextInt();
+			int dir = sc.nextInt();
+			if(dir == oneWay) {
+				map[start][end] = 0;
+				map[end][start] = 1;
+			}
+			if(dir == twoWay) {
+				map[start][end] = 0;
+				map[end][start] = 0 ;
+			}
+		}
+
+
+
+		for(int k=1; k<=N; k++) {
+			for(int i=1; i<=N; i++) {
+				for(int j=1; j<=N; j++) {
+					if(map[i][j] > map[i][k] + map[k][j]) {
+						map[i][j] = map[i][k] + map[k][j];
+					}
+				}
+			}
+		}
+
+
+
+		int K = sc.nextInt();
+
+		for(int i=0; i<K; i++) {
+			int start = sc.nextInt();
+			int end = sc.nextInt();
+
+			System.out.println(map[start][end]);
+		}
+
+
+
+
+	}
+
+
+}
+
+
+
+
