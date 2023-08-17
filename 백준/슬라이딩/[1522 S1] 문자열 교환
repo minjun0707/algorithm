@@ -1,0 +1,58 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.regex.Pattern;
+
+import javax.swing.*;
+
+class Main {
+
+	static char[] arr;
+	static int answer = Integer.MAX_VALUE;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String str = br.readLine();
+
+		int aCount = 0;
+
+		arr = new char[str.length()];
+		for(int i=0; i < str.length(); i++) {
+			arr[i] = str.charAt(i);
+			if(arr[i] == 'a') {
+				aCount++;
+			}
+		}
+
+
+		for(int i=0; i< str.length();i++) {
+			int bCount = 0;
+			for(int j=0 ; j < aCount; j++) {
+				if(arr[(i+j) % str.length()] == 'b'){
+					bCount++;
+				}
+
+			}
+
+			answer = Math.min(bCount,answer);
+		}
+
+		System.out.println(answer);
+
+
+
+
+	}
+
+
+
+}
+
+
+
+
