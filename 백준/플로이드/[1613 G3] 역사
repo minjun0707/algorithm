@@ -1,0 +1,74 @@
+import java.util.*;
+
+import com.sun.security.jgss.GSSUtil;
+
+class Main {
+
+	static int N;
+	static int K;
+	static int S;
+	static int INF = 401;
+	static int distance[][];
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		N = sc.nextInt();
+		K = sc.nextInt();
+
+		distance = new int[N+1][N+1];
+
+		for(int i=1; i<=N; i++) {
+			for(int j=1; j<=N; j++) {
+				if(i!=j) {
+					distance[i][j] = INF;
+				}
+			}
+		}
+
+		for(int i=0; i<K; i++) {
+			int start = sc.nextInt();
+			int end = sc.nextInt();
+
+			distance[start][end] = 1;
+		}
+
+
+		floyd();
+
+
+		S = sc.nextInt();
+
+		for(int i=0; i<S; i++) {
+			int start = sc.nextInt();
+			int end = sc.nextInt();
+
+			if(distance[start][end] == INF) {
+				if(distance[end][start] >=1 && distance[end][start] != INF) {
+					System.out.println(1);
+				}
+				else {
+					System.out.println(0);
+				}
+			}
+			else if(distance[start][end] >=1) {
+				System.out.println(-1);
+			}
+		}
+	}
+
+	static void floyd() {
+		for(int k=1; k<=N; k++ ){
+			for(int i=1; i<=N; i++) {
+				for(int j=1; j<=N; j++) {
+					if(distance[i][j] > distance[i][k] + distance[k][j]) {
+						distance[i][j] = distance[i][k] + distance[k][j];
+					}
+				}
+			}
+		}
+	}
+
+}
+
+
+
+
