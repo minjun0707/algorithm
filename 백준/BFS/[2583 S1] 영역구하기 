@@ -1,0 +1,123 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+import java.util.*;
+
+public class MyClass {
+     //세로
+    static int N;
+
+    //가로
+    static int M;
+
+    //사각형 개수
+    static int K; 
+
+
+    static int map[][];
+    static boolean visit[][];
+    static int dirR[] = {0,0,1,-1};
+     static int dirC[] = {1,-1,0,0};
+    static int count = 0;
+    static List<Integer> list;
+    
+    public static void main(String args[]) throws IOException { 
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        
+        M = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(st.nextToken());
+        K = Integer.parseInt(st.nextToken());
+
+        map = new int[M][N];
+        visit = new boolean[M][N];
+        
+      
+        for(int i=0; i<K; i++) {
+            st = new StringTokenizer(br.readLine());
+
+            int leftBotX = Integer.parseInt(st.nextToken());
+            int lefttBotY = Integer.parseInt(st.nextToken());
+            int rightTopX = Integer.parseInt(st.nextToken());
+            int rightTopY = Integer.parseInt(st.nextToken());
+            
+            
+            for(int k=M-rightTopY; k < M-lefttBotY; k++) {
+                
+                for(int j=leftBotX; j < rightTopX; j++) {
+                    visit[k][j] = true;
+                }
+            }
+        }
+        
+        list = new ArrayList<>();
+        
+        for(int i=0; i< M; i++) {
+            for(int j=0; j< N; j++) {
+                if(visit[i][j] == false) {
+                    bfs(i,j);
+                    list.add(count);
+                }
+            }
+        }
+        
+        System.out.println(list.size());
+        Collections.sort(list);
+        for(int i=0; i< list.size(); i++) {
+            System.out.println(list.get(i));
+        }
+        
+        
+        
+        
+        
+        
+    }
+    
+    static void bfs(int r, int c) {
+        visit[r][c] = true;
+        count = 1;
+        
+        Cell cell = new Cell(r,c);
+        Queue<Cell> que = new LinkedList<>();
+        que.offer(cell);
+        
+        while(!que.isEmpty()) {
+            Cell now = que.poll();
+            
+            for(int i=0; i<4; i++) {
+                int nextR = now.r + dirR[i];
+                int nextC = now.c + dirC[i];
+                
+                if(!rangeCheck(nextR,nextC)) {
+                    continue;
+                }
+                
+                if(!visit[nextR][nextC]) {
+                    count++;
+                    visit[nextR][nextC] = true;
+                    que.offer(new Cell(nextR,nextC));
+                }
+                
+            }
+            
+            
+        }
+        
+        
+        
+    }
+    static boolean rangeCheck(int r, int c) {
+        return r>=0 && r < M && c>=0 && c < N;
+    }
+    
+    static class Cell {
+        int r;
+        int c;
+        Cell(int r, int c) {
+            this.r = r;
+            this.c = c;
+        }
+    }
+}
