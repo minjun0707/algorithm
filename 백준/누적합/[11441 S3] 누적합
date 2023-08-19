@@ -1,0 +1,48 @@
+import java.util.*;
+
+import com.sun.security.jgss.GSSUtil;
+
+class Main {
+
+	//N개의 수
+	static int N;
+
+	//m개의 구간
+	static int M;
+
+	static int arr[];
+	static int sum[];
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		N = sc.nextInt();
+
+		arr = new int[N+2];
+		sum = new int[N+2];
+
+		for(int i=1; i<=N; i++) {
+			int val = sc.nextInt();
+			arr[i] = val;
+			sum[i] = sum[i-1] + arr[i];
+		}
+
+		M = sc.nextInt();
+
+		for(int k=0; k<M; k++) {
+			int i = sc.nextInt();
+			int j = sc.nextInt();
+
+			System.out.println(sum[j]-sum[i-1]);
+
+		}
+
+
+
+	}
+
+
+}
+
+
+
+
