@@ -1,0 +1,100 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+import java.util.*;
+
+public class MyClass {
+    
+    static int F;
+     static int S;
+      static int G;
+       static int U;
+        static int D;
+    
+    static int floor[];
+    static int NOT_VISIT = 0;
+    static int count = 1; 
+    static int answer = -1;
+    public static void main(String args[]) throws IOException { 
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+      StringTokenizer st = new StringTokenizer(br.readLine());
+      
+      // 총 F 층
+      F = Integer.parseInt(st.nextToken());
+      // 현재 있는 층
+      S = Integer.parseInt(st.nextToken());
+      
+      //스타트 링크 층
+      G = Integer.parseInt(st.nextToken());
+      
+      //위로 두번
+      U = Integer.parseInt(st.nextToken());
+      
+      //아래로 한번
+      D = Integer.parseInt(st.nextToken());
+      
+      floor = new int[F+1];
+      
+      //현재 위치한 층
+      floor[S] = 0;
+      
+      bfs();
+      
+      if(answer == -1 ) {
+       System.out.println("user the stairs");   
+      }
+     
+      else {
+          System.out.println(answer);   
+      } 
+      
+      
+      
+        
+       
+    }
+    
+    static void bfs() {
+        Queue<Integer> que = new LinkedList<>();
+        que.offer(S);
+        
+        while(!que.isEmpty()) {
+            
+            int now = que.poll();
+            
+            if(now == G) {
+                answer = floor[now];
+                return;
+            }
+            
+            int up = now + U;
+            int down = now - D;
+            
+            if(up <=F && up != S) {
+                if(floor[up] == NOT_VISIT) {
+                    floor[up] = floor[now] + 1;
+                    que.offer(up);
+                }
+            }
+            
+            if(down >=1 && down != S) {
+                 if(floor[down] == NOT_VISIT) {
+                    floor[down] = floor[now] + 1;
+                    que.offer(down);
+                }
+            }
+            
+            
+        }
+        
+        
+        
+        
+    }
+    
+    
+    
+    
+    
+}스타트링크 5014
