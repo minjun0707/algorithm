@@ -1,0 +1,66 @@
+
+import java.util.*;
+import java.io.*;
+
+class Main {
+
+	static int N;
+	static int Q;
+
+	//악보 난이
+	static int[] song;
+	static int[] sum;
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		N = Integer.parseInt(br.readLine());
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		song = new int[N+1];
+
+		//실수한 악보 개수
+		sum = new int[N+1];
+
+		for(int i=1; i<=N; i++) {
+			song[i] = Integer.parseInt(st.nextToken());
+			if(song[i] < song[i-1]) {
+
+				sum[i] = sum[i-1] + 1;
+			} else {
+				sum[i] = sum[i-1];
+			}
+		}
+
+		// //총합 확인
+		// for(int i=1; i<=N; i++) {
+		// 	System.out.println("sum " +i + " :" + sum[i]);
+		// }
+
+
+		Q = Integer.parseInt(br.readLine());
+
+
+		StringBuilder sb = new StringBuilder();
+		for(int i=0; i<Q; i++) {
+			st = new StringTokenizer(br.readLine());
+			int start = Integer.parseInt(st.nextToken());
+			int end = Integer.parseInt(st.nextToken());
+
+			//출력
+			sb.append(sum[end] - sum[start]);
+			sb.append("\n");
+		}
+
+		System.out.println(sb);
+
+
+
+
+	}
+
+
+}
+
+
+
+
