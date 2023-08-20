@@ -1,0 +1,74 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import javax.swing.*;
+
+class Main {
+
+	static int min = Integer.MAX_VALUE;
+	static int max = Integer.MIN_VALUE;
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int T = Integer.parseInt(br.readLine());
+
+
+		for(int i=0; i<T; i++) {
+			int alphabet[] = new int[26];
+			min = Integer.MAX_VALUE;
+			max = Integer.MIN_VALUE;
+
+			String W = br.readLine();
+			int K = Integer.parseInt(br.readLine());
+
+
+
+			for(int j=0; j< W.length() ;j++) {
+				alphabet[W.charAt(j)-97] += 1;
+;			}
+
+			for(int j=0; j<W.length(); j++) {
+				if(alphabet[W.charAt(j)-97]< K) {
+					continue;
+				}
+
+				int count = 0;
+				int len = 0;
+				for(int k=j; k<W.length();k++) {
+					len++;
+					if(W.charAt(j) == W.charAt(k)) {
+						count++;
+					}
+
+					if(count == K) {
+						min = Math.min(min,len);
+						max = Math.max(max,len);
+						break;
+					}
+
+
+				}
+			}
+
+			if(min == Integer.MAX_VALUE || max == Integer.MIN_VALUE) {
+				System.out.println(-1);
+			} else {
+				System.out.println(min + " " + max);
+			}
+
+
+
+		}
+
+
+	}
+}
+
+
+
+
