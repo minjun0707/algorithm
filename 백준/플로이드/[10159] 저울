@@ -1,0 +1,95 @@
+import java.util.*;
+import java.io.*;
+
+class Main {
+
+	static final int INF = 101;
+	static int N;
+	static int M;
+	static int dist[][];
+	static int startArr[];
+	static int endArr[];
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		N = Integer.parseInt(br.readLine());
+		M = Integer.parseInt(br.readLine());
+
+		dist = new int[N + 1][N + 1];
+		startArr = new int[M + 1];
+		endArr = new int[M + 1];
+
+		for (int i = 1; i <= N; i++) {
+			for (int j = 1; j <= N; j++) {
+				if (i != j) {
+					dist[i][j] = INF;
+				}
+			}
+		}
+
+		//입력 값.
+		for (int i = 0; i < M; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			int start = Integer.parseInt(st.nextToken());
+			int end = Integer.parseInt(st.nextToken());
+
+			startArr[i] = start;
+			endArr[i] = end;
+
+			dist[start][end] = 1;
+		}
+
+		floyd();
+
+		StringBuilder sb = new StringBuilder();
+		//정답 출력
+		//만약 INF이면 결과를 알 수 없다.
+		for (int i = 1; i <= N; i++) {
+			int count = 0;
+			for (int j = 1; j <= N; j++) {
+				if (i == j) {
+					continue;
+				}
+
+				if (dist[i][j] != INF && dist[i][j] != 0) {
+					count++;
+				}
+
+			}
+
+			for (int j = 1; j <= N; j++) {
+				if (i == j) {
+					continue;
+				}
+
+				if (dist[j][i] != INF && dist[j][i] != 0) {
+					count++;
+				}
+			}
+
+			sb.append(N - 1 - count);
+			sb.append("\n");
+		}
+
+		System.out.println(sb);
+
+	}
+
+	static void floyd() {
+		for (int k = 1; k <= N; k++) {
+			for (int i = 1; i <= N; i++) {
+				for (int j = 1; j <= N; j++) {
+					if (dist[i][j] > dist[i][k] + dist[k][j]) {
+						dist[i][j] = dist[i][k] + dist[k][j];
+					}
+				}
+			}
+		}
+
+	}
+
+}
+
+
+
+
