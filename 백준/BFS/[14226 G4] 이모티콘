@@ -1,0 +1,68 @@
+import java.util.*;
+import java.io.*;
+
+class Main {
+
+	static int S;
+	static boolean visit[][];
+	public static void main(String[] args) throws IOException {
+
+		Scanner sc = new Scanner(System.in);
+		S = sc.nextInt();
+		visit = new boolean[1001][1001];
+
+		bfs();
+
+	}
+
+	static void bfs() {
+		Queue<Node> que = new LinkedList<>();
+		que.offer(new Node(1,0,0));
+		visit[1][0]= true;
+
+		while(!que.isEmpty()) {
+			Node now = que.poll();
+
+			if(now.emoCount == S) {
+				System.out.println(now.time);
+				return;
+			}
+
+			// 화면에 있는 이모티콘을 모두 복사해서 클립보드에 저장한다.
+			// 클립보드에 있는 모든 이모티콘을 화면에 붙여넣기 한다.
+			// 화면에 있는 이모티콘 중 하나를 삭제한다.
+			que.offer(new Node(now.emoCount, now.emoCount,now.time+1));
+
+			if(now.emoCount + now.clipBoard <=S && now.clipBoard != 0 && visit[now.emoCount+now.clipBoard][now.clipBoard] == false) {
+				que.offer(new Node(now.emoCount + now.clipBoard, now.clipBoard, now.time + 1));
+				visit[now.emoCount + now.clipBoard][now.clipBoard] = true;
+			}
+
+			if(now.emoCount >= 1&& visit[now.emoCount-1][now.clipBoard] == false) {
+				que.offer(new Node(now.emoCount-1, now.clipBoard,now.time+1));
+				visit[now.emoCount-1][now.clipBoard] = true;
+			}
+
+		}
+
+	}
+
+	static class Node {
+		int emoCount = 0;
+		int clipBoard = 0;
+		int time = 0;
+
+		Node(int emoCount,int clipBoard, int time) {
+			this.emoCount = emoCount;
+			this.clipBoard = clipBoard;
+			this.time = time;
+		}
+	}
+
+
+
+}
+
+
+
+
