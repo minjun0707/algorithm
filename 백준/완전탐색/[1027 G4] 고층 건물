@@ -1,0 +1,62 @@
+import java.util.*;
+import java.io.*;
+
+class Main {
+
+	static int N;
+	static int[] building;
+	static int answer = Integer.MIN_VALUE;
+
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		N = sc.nextInt();
+
+		building = new int[N + 1];
+
+		for (int i = 1; i <= N; i++) {
+			building[i] = sc.nextInt();
+		}
+
+		for (int i = 1; i <= N; i++) {
+
+			int count = 0;
+
+			//왼쪽
+			double first = 0;
+			for (int j = i - 1; j > 0; j--) {
+				double now = (double )(building[i] - building[j]) / (i - j);
+
+
+				if (j == i - 1||now < first) {
+					first = now;
+					count++;
+				}
+			}
+
+			//오른쪽
+			first = 0;
+			for (int j = i + 1; j <= N; j++) {
+				double now = (double)(building[i] - building[j]) / (i - j);
+
+				if (j == i + 1 || now > first) {
+					first = now;
+					count++;
+				}
+			}
+
+
+			if (count > answer) {
+				answer = count;
+			}
+
+		}
+
+		System.out.println(answer);
+
+	}
+
+}
+
+
+
+
