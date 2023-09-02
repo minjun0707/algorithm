@@ -1,0 +1,71 @@
+import java.util.*;
+import java.io.*;
+
+class Main {
+
+	static int N;
+	static int M;
+
+	static int arr[];
+
+	static int num[];
+	static boolean visit[];
+
+	static StringBuilder sb = new StringBuilder();
+
+	static Map<String,Boolean> map = new HashMap<>();
+
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		N = sc.nextInt();
+		M = sc.nextInt();
+
+		arr = new int[N];
+		num = new int[M];
+		visit = new boolean[N];
+
+		for (int i = 0; i < N; i++) {
+			arr[i] = sc.nextInt();
+		}
+
+		Arrays.sort(arr);
+
+		dfs(0);
+
+	}
+
+	static void dfs(int depth) {
+
+		if(depth == M) {
+			for(int i=0; i<M; i++) {
+				sb.append(num[i]);
+				sb.append(" ");
+			}
+
+			if(map.get(sb.toString()) == null) {
+				map.put(sb.toString(),true);
+				System.out.println(sb);
+			}
+
+			sb = new StringBuilder();
+			return;
+		}
+
+		for(int i=0; i<N; i++) {
+			if(visit[i] == false) {
+				visit[i] = true;
+				num[depth] = arr[i];
+				dfs(depth+1);
+				visit[i] = false;
+			}
+
+		}
+
+
+	}
+
+}
+
+
+
+
