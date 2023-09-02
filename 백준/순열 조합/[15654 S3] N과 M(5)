@@ -1,0 +1,59 @@
+import java.util.*;
+import java.io.*;
+
+class Main {
+
+	static int N;
+	static int M;
+	static int arr[];
+	static boolean visit[];
+	static int nums[];
+
+	static StringBuilder sb= new StringBuilder();
+
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		N = sc.nextInt();
+		M = sc.nextInt();
+
+		arr = new int[N];
+		visit = new boolean[N];
+		nums = new int[N];
+		for (int i = 0; i < N; i++) {
+			arr[i] = sc.nextInt();
+		}
+
+		Arrays.sort(arr);
+
+		dfs(0);
+
+
+	}
+
+	static void dfs(int depth) {
+
+		if (depth == M) {
+			for(int i=0; i<M; i++) {
+				sb.append(nums[i]);
+				sb.append(" ");
+			}
+			System.out.println(sb);
+			sb= new StringBuilder();
+		}
+
+		for (int i = 0; i < N; i++) {
+			if(visit[i] == false)  {
+				visit[i] = true;
+				nums[depth] = arr[i];
+				dfs(depth+1);
+				visit[i] = false;
+			}
+		}
+
+	}
+
+}
+
+
+
+
