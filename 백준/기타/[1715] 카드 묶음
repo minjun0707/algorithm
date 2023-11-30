@@ -1,0 +1,56 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+import javax.print.attribute.standard.PrinterResolution;
+
+public class Main {
+
+
+
+   public static void main(String[] args) throws IOException {
+      new Main().solution();
+   }
+
+   public void solution() throws IOException {
+
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+      int N = Integer.parseInt(br.readLine());
+
+      PriorityQueue<Integer> queue = new PriorityQueue();
+
+      //우선순위 큐로 카드 묶음 정렬 
+      //시간 복잡도 log(n)
+      for(int i=0; i < N; i++) {
+         queue.add(Integer.parseInt(br.readLine()));
+      }
+
+      //정렬된 카드 묶음을 두개씩 더한 후 우선순위 큐에 삽입
+      //우선순위큐에 개수가 1개인 경우 루프 탈출
+      //시간복잡도 n * log(n)
+      int answer = 0;
+      while(queue.size()!=1) {
+         int val1 = queue.poll();
+         int val2 = queue.poll();
+
+         int sum = val1 + val2;
+         answer = sum + answer;
+
+         queue.offer(sum);
+      }
+
+      //총 시간 복잡도 n + n * log(n)
+      System.out.println(answer);
+
+   }
+
+
+}
